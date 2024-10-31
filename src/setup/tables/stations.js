@@ -1,5 +1,4 @@
-const fs = require("node:fs");
-const readline = require("node:readline");
+const linewiseFileRead = require("../file_reader");
 
 async function populateStations(file, db) {
   const stations = await extractStations(file);
@@ -18,19 +17,10 @@ async function populateStations(file, db) {
   }
 }
 
-module.exports = populateStations;
 async function extractStations(file) {
-  const fileStream = fs.createReadStream(file);
-
   const stations = [];
 
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  });
-  // Note: we use the crlfDelay option to recognize all instances of CR LF
-  // ('\r\n') in input.txt as a single line break.
-  for await (const line of rl) {
+  for await (const line of linewiseFileRead(file)) {
     if (line.startsWith("/!!")) continue; // Ignore comments
 
     const isRootingPoint = line.includes("(a routing point)");
@@ -69,3 +59,5 @@ async function extractStations(file) {
 
   return stations;
 }
+
+module.exports = populateStations;
