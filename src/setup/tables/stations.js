@@ -4,16 +4,40 @@ async function populateStations(file, db) {
   const stations = await extractStations(file);
 
   await db.query("DROP TABLE IF EXISTS stations;");
+  await db.query("DROP TABLE IF EXISTS routing_points;");
+  await db.query("DROP TABLE IF EXISTS routing_groups;");
 
   await db.query(
-    "CREATE TABLE stations (id VARCHAR(3) PRIMARY KEY, name VARCHAR(255));"
+    "CREATE TABLE stations (id VARCHAR(3) PRIMARY KEY, name VARCHAR(255), routing_point BOOLEAN);"
+  );
+
+  await db.query(
+    "CREATE TABLE routing_points (station VARCHAR(3), routing_point VARCHAR(3));"
+  );
+
+  await db.query(
+    "CREATE TABLE routing_groups (station VARCHAR(3), routing_group VARCHAR(3));"
   );
 
   for (const station of stations) {
-    db.query("INSERT INTO stations (id, name) VALUES ($1, $2);", [
-      station.id,
-      station.name,
-    ]);
+    db.query(
+      "INSERT INTO stations (id, name, routing_point) VALUES ($1, $2, $3);",
+      [station.id, station.name, station.isRootingPoint]
+    );
+
+    if (station.stationGroup) {
+      db.query(
+        "INSERT INTO routing_groups (station, routing_group) VALUES ($1, $2);",
+        [station.id, station.stationGroup]
+      );
+    }
+
+    for (rp of station.routingPoints) {
+      db.query(
+        "INSERT INTO routing_points (station, routing_point) VALUES ($1, $2);",
+        [station.id, rp]
+      );
+    }
   }
 }
 
@@ -32,7 +56,12 @@ async function extractStations(file) {
         .join("")
         .replace(" (a routing point)", "");
 
-      stations.push({ name: station, isRootingPoint });
+      stations.push({
+        name: station,
+        isRootingPoint,
+        stationGroup: null,
+        routingPoints: [],
+      });
     } else {
       const current = stations[stations.length - 1];
       const items = line.split(",");
@@ -43,17 +72,11 @@ async function extractStations(file) {
         current.stationGroup = items[5];
       }
 
-      current.routingPoints = [];
-
       for (let i = 1; i < 5; i++) {
         if (items[i] !== "") {
           current.routingPoints.push(items[i]);
         }
       }
-
-      if (current.routingPoints == []) delete current.routingPoints;
-
-      //   console.log(stations[stations.length - 1]);
     }
   }
 

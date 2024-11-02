@@ -15,7 +15,9 @@ const { shortestPath } = require("./dijkstra");
 getAllStationIds().then((res) => {
   createRailwayGraph(res, getNeighbours).then((res) => {
     // shortestPath(res, "CBG", "PBO");
-    shortestPath(res, "CBG", "EDB");
+    shortestPath(res, "CBG", "EDB").then((res) => {
+      console.log(res);
+    });
   });
 });
 

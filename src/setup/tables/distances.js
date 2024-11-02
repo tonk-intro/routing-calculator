@@ -3,7 +3,7 @@ const linewiseFileRead = require("../file_reader");
 async function populateDistances(file, db) {
   const distances = await extractDistances(file);
 
-  console.log(distances);
+  //   console.log(distances);
 
   await db.query("DROP TABLE IF EXISTS distances;");
 

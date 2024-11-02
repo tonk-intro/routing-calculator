@@ -27,9 +27,6 @@ async function shortestPath(graph, from, to) {
           distances[nb.name].distance
         ) {
           if (distances[nb.name].predecessor == prev.name) {
-            console.log(
-              `Replacing ${distances[nb.name].predecessor} with ${prev.name} `
-            );
           }
           distances[nb.name].distance =
             nb.distance + distances[prev.name].distance;
@@ -47,13 +44,15 @@ async function shortestPath(graph, from, to) {
     }
   }
 
+  const path = [to];
+
   let current = distances[to];
   while (current.predecessor != from) {
-    console.log(current.predecessor);
+    path.push(current.predecessor);
     current = distances[current.predecessor];
   }
 
-  console.log(distances[to].distance);
+  return { distance: distances[to].distance, path: [...path, from].reverse() };
 }
 
 module.exports = { shortestPath };
