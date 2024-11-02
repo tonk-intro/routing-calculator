@@ -1,8 +1,8 @@
 require("dotenv").config({ path: "../../.env" });
 
 const {
-  getStationForId,
-  getIdForStation,
+  getStationById,
+  getStationByName,
   getAllStationIds,
 } = require("./db/stations");
 
@@ -20,11 +20,3 @@ getAllStationIds().then((res) => {
     });
   });
 });
-
-// getStationForId("CBG");
-// getIdForStation("Cambridge");
-
-// getAllStationIds().then((res) => console.log(res));
-
-// getNeighbours("CBG").then((res) => console.log(res));
-// getDistance("CBG", "FXN").then((res) => console.log(res));
