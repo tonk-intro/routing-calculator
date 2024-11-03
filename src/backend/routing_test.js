@@ -3,11 +3,38 @@ require("dotenv").config({ path: "../../.env" });
 const { getFare } = require("./db/fares");
 const { getRoutingPoints } = require("./db/routing");
 const { getStationByName } = require("./db/stations");
+const {
+  getCommonRoutingPoint,
+  getValidRoutingPoints,
+} = require("./logic/routing_points");
+const { getStationById, getAllStationIds } = require("./db/stations");
 
-// getRoutingPoints("CBG").then((res) => console.log(res));
+const { getNeighbours, getDistance } = require("./db/distances");
 
-// getStationByName("Morpeth").then((name) => {
-//   getRoutingPoints(name.id).then((res) => console.log(res));
-// });
+const { createRailwayGraph } = require("./logic/graph");
 
-getFare("CBG", "MPL").then((res) => console.log(res));
+const { shortestPath } = require("./logic/dijkstra");
+
+async function test() {
+  const allTheStations = await getAllStationIds();
+  const stationsGraph = await createRailwayGraph(allTheStations, getNeighbours);
+
+  const shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
+
+  // await getCommonRoutingPoint("CBG", "MPL", shortestPathFunc);
+  // await getCommonRoutingPoint("CBG", "FXN", shortestPathFunc);
+  // await getCommonRoutingPoint("HSB", "CPU", shortestPathFunc);
+
+  await getValidRoutingPoints("ASN", "ALM");
+
+  //   const fare = await getFare("CBG", "MPL");
+
+  //   const st = await getStationByName("Morpeth");
+  //   const rp = await getRoutingPoints(st.id);
+
+  //   console.log(rp);
+
+  //   console.log(fare);
+}
+
+test();

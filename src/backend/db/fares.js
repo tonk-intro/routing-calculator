@@ -18,6 +18,10 @@ async function convertCrsToNlc(crs) {
     [crs]
   );
 
+  if (rows.length == 0) {
+    throw new Error(`Unable to resolve CRS-Code: ${crs}`);
+  }
+
   return rows[0].nlc_code;
 }
 

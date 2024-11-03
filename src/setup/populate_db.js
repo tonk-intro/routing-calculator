@@ -7,13 +7,17 @@ const { populateFares } = require("./tables/fares");
 
 const populateStations = require("./tables/stations");
 
+const { populateStationGroups } = require("./tables/groups");
+
 const PREFIX = "../../private/routing_data/";
 const stationsFile = PREFIX + "RJRG0831.RGS";
 const distancesFile = PREFIX + "RJRG0831.RGD";
 const codeMapFile = PREFIX + "RJRG0831.RGY";
 const faresFile = PREFIX + "nfm64";
+const groupFile = PREFIX + "RJRG0831.RGG";
 
 // populateFares(faresFile, pool); // It's a monster!!
 // populateStations(stationsFile, pool);
 // populateDistances(distancesFile, pool);
 // populateCodeMap(codeMapFile, pool);
+populateStationGroups(groupFile, pool);
