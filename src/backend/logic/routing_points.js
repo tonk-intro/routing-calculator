@@ -1,4 +1,4 @@
-const { getRoutingPoints, groupToStation } = require("../db/routing");
+const { getRoutingPoints, expandStationGroups } = require("../db/routing");
 const { getFare } = require("./../db/fares");
 
 async function getCommonRoutingPoint(from, to, shortestPath) {
@@ -28,29 +28,52 @@ async function getValidRoutingPoints(from, to) {
 
   if (rpFrom.length + rpTo.length == 2) return { from: rpFrom, to: rpTo };
 
+  rpFrom = await expandStationGroups(rpFrom);
+  rpTo = await expandStationGroups(rpTo);
+
   const validFrom = [];
   const validTo = [];
 
-  for (rp of rpTo) {
-    const fare1 = await getFare(from, rp);
-    const fare2 = await getFare(from, to);
+  let fare1, fare2;
 
-    if (fare1 - fare2 > 0) {
-      console.log(`${rp} not valid!`);
+  for (rp of rpTo) {
+    try {
+      fare1 = await getFare(from, rp);
+      fare2 = await getFare(from, to);
+    } catch (err) {
+      console.log("ERROR: " + err);
+      // No fare could be determined for one of the routes.
+      // Based on the documentation it is not very clear to me what is supposed to happen.
+      // For now: regard route as invalid
+
+      continue;
+    }
+
+    if (fare1.fare - fare2.fare > 0) {
+      // console.log(`${rp} not valid!`);
     } else {
-      console.log(`${rp} valid!`);
+      // console.log(`${rp} valid!`);
       validTo.push(rp);
     }
   }
 
   for (rp of rpFrom) {
-    const fare1 = await getFare(rp, to);
-    const fare2 = await getFare(from, to);
+    try {
+      fare1 = await getFare(rp, to);
+      fare2 = await getFare(from, to);
+    } catch (err) {
+      console.log("ERROR: " + err);
+      // No fare could be determined for one of the routes.
+      // Based on the documentation it is not very clear to me what is supposed to happen.
+      // For now: regard route as invalid
 
-    if (fare1 - fare2 > 0) {
-      console.log(`${rp} not valid!`);
+      continue;
+    }
+
+    if (fare1.fare - fare2.fare > 0) {
+      // console.log(`${rp} not valid!`);
     } else {
-      console.log(`${rp} valid!`);
+      // console.log(`${rp} valid!`);
       validFrom.push(rp);
     }
   }

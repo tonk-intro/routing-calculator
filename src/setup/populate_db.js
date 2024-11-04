@@ -20,4 +20,4 @@ const groupFile = PREFIX + "RJRG0831.RGG";
 // populateStations(stationsFile, pool);
 // populateDistances(distancesFile, pool);
 // populateCodeMap(codeMapFile, pool);
-populateStationGroups(groupFile, pool);
+// populateStationGroups(groupFile, pool);

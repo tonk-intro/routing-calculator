@@ -1,24 +1,26 @@
 const pool = require("../../db_pool");
 
-const { convertGroupToStation } = require("./routing");
+// const { convertGroupToStation } = require("./routing");
 
 async function getFare(from, to) {
-  // We don't have fares for CRS group codes like G12. So convert those first
-  const fromCrs = await convertGroupToStation(from);
-  const toCrs = await convertGroupToStation(to);
+  // // We don't have fares for CRS group codes like G12. So convert those first
+  // const fromCrs = await convertGroupToStation(from);
+  // const toCrs = await convertGroupToStation(to);
 
-  const fromNlc = await convertCrsToNlc(fromCrs);
-  const toNlc = await convertCrsToNlc(toCrs);
+  const fromNlc = await convertCrsToNlc(from);
+  const toNlc = await convertCrsToNlc(to);
 
   const { rows } = await pool.query(
-    "SELECT fare FROM fares WHERE from_nlc=$1 AND to_nlc=$2",
+    "SELECT fare, type FROM fares WHERE from_nlc=$1 AND to_nlc=$2 ORDER BY type",
     [fromNlc, toNlc]
   );
 
   if (rows.length == 0)
-    throw new Error("Couldn't get fare from " + from + " to " + to);
+    throw new Error(
+      `Couldn't get fare from ${from} (${fromNlc}) to ${to} (${toNlc}) `
+    );
 
-  return rows[0].fare;
+  return { fare: rows[0].fare, type: rows[0].type };
 }
 
 async function convertCrsToNlc(crs) {
