@@ -1,8 +1,8 @@
 require("dotenv").config({ path: "../../.env" });
 
 const { getFare } = require("./db/fares");
-const { getRoutingPoints } = require("./db/routing");
-const { getStationByName } = require("./db/stations");
+const { getRoutingPoints, contractStationGroups } = require("./db/routing");
+const { getStationByName, getStationOrGroupById } = require("./db/stations");
 const {
   getCommonRoutingPoint,
   getValidRoutingPoints,
@@ -25,8 +25,13 @@ async function test() {
   // await getCommonRoutingPoint("CBG", "FXN", shortestPathFunc);
   // await getCommonRoutingPoint("HSB", "CPU", shortestPathFunc);
 
-  console.log(await getValidRoutingPoints("CEY", "BKD"));
-  console.log(await getValidRoutingPoints("LEU", "BSS"));
+  console.log(await getStationOrGroupById("G12"));
+
+  const rps1 = await getValidRoutingPoints("CEY", "BKD");
+  const rps2 = await getValidRoutingPoints("LEU", "BSS");
+
+  console.log(await contractStationGroups(rps1.from));
+  console.log(await contractStationGroups(rps1.to));
 
   // console.log(await getValidRoutingPoints("ASN", "ALM"));
   // console.log(await getValidRoutingPoints("BYA", "TRI"));

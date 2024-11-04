@@ -44,6 +44,31 @@ async function expandStationGroups(routingPoints) {
   return result;
 }
 
+// Takes array of touring points and collapses the stations that have routing groups into them
+async function contractStationGroups(routingPoints) {
+  const result = [];
+
+  for (rp of routingPoints) {
+    const conv = await convertStationToGroup(rp);
+    if (!result.includes(conv)) {
+      result.push(conv);
+    }
+  }
+
+  return result;
+}
+
+async function convertStationToGroup(stationId) {
+  const { rows } = await pool.query(
+    "SELECT routing_group FROM routing_groups WHERE station=$1",
+    [stationId]
+  );
+
+  if (rows.length == 0) return stationId;
+
+  return rows[0].routing_group;
+}
+
 async function convertGroupToStations(groupId) {
   const pattern = /^G\d{2}$/;
 
@@ -74,4 +99,5 @@ module.exports = {
   getRoutingPoints,
   convertGroupToMainStation,
   expandStationGroups,
+  contractStationGroups,
 };

@@ -10,6 +10,21 @@ async function getStationById(id) {
   return rows[0];
 }
 
+async function getStationOrGroupById(id) {
+  const pattern = /^G\d{2}$/;
+
+  if (!pattern.test(id)) {
+    return await getStationByName(id);
+  }
+
+  const { rows } = await pool.query(
+    "SELECT name FROM station_groups_main WHERE group_id=$1;",
+    [id]
+  );
+
+  return rows[0].name;
+}
+
 async function getStationByName(name) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE name=$1;", [
     name,
@@ -26,4 +41,9 @@ async function getAllStationIds() {
   return rows.map((item) => item.id);
 }
 
-module.exports = { getStationById, getStationByName, getAllStationIds };
+module.exports = {
+  getStationById,
+  getStationByName,
+  getAllStationIds,
+  getStationOrGroupById,
+};
