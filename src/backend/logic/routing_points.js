@@ -1,4 +1,4 @@
-const { getRoutingPoints } = require("../db/routing");
+const { getRoutingPoints, groupToStation } = require("../db/routing");
 const { getFare } = require("./../db/fares");
 
 async function getCommonRoutingPoint(from, to, shortestPath) {
@@ -23,19 +23,39 @@ async function getCommonRoutingPoint(from, to, shortestPath) {
 async function getValidRoutingPoints(from, to) {
   // We might need to exclude some routing points based on the fares in 1996
 
-  const rpFrom = await getRoutingPoints(from);
-  const rpTo = await getRoutingPoints(to);
+  let rpFrom = await getRoutingPoints(from);
+  let rpTo = await getRoutingPoints(to);
+
+  if (rpFrom.length + rpTo.length == 2) return { from: rpFrom, to: rpTo };
+
+  const validFrom = [];
+  const validTo = [];
 
   for (rp of rpTo) {
     const fare1 = await getFare(from, rp);
     const fare2 = await getFare(from, to);
 
-    if (fare1 - fare2 < 0) {
+    if (fare1 - fare2 > 0) {
       console.log(`${rp} not valid!`);
     } else {
       console.log(`${rp} valid!`);
+      validTo.push(rp);
     }
   }
+
+  for (rp of rpFrom) {
+    const fare1 = await getFare(rp, to);
+    const fare2 = await getFare(from, to);
+
+    if (fare1 - fare2 > 0) {
+      console.log(`${rp} not valid!`);
+    } else {
+      console.log(`${rp} valid!`);
+      validFrom.push(rp);
+    }
+  }
+
+  return { from: validFrom, to: validTo };
 }
 
 module.exports = { getCommonRoutingPoint, getValidRoutingPoints };

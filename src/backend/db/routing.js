@@ -11,26 +11,39 @@ async function getRoutingPoints(stationId) {
     [stationId]
   );
 
-  // The routing groups GXX are useless in practice because we cannot use them to look up fares
-  // So here we translate them into station codes
+  if (rows.length == 0) {
+    // This station isn't a routing point itself but also doesn't have any RP
+    // associated with it. It must thus be a member of a station group.
 
-  const rps = rows.map((rp) => rp.routing_point);
-  const result = [];
+    // const { rows } = await pool.query(
+    //   `SELECT station_id FROM station_groups_main JOIN routing_groups
+    //     ON station_groups_main.group_id = routing_groups.routing_group
+    //     WHERE routing_groups.station=$1`,
+    //   [stationId]
+    // );
 
-  const pattern = /^G\d{2}$/;
-  for (rp of rps) {
-    if (pattern.test(rp)) {
-      const stationId = await groupToStation(rp);
-      result.push(stationId);
-    } else {
-      result.push(rp);
+    const { rows } = await pool.query(
+      `SELECT routing_group FROM routing_groups WHERE station=$1`,
+      [stationId]
+    );
+
+    if (rows.length == 0) {
+      throw new Error("We didn't find a routing point for " + stationId);
     }
+
+    return [rows[0].routing_group];
+
+    // console.log("RP for " + stationId + " is " + );
   }
 
-  return result;
+  return rows.map((rp) => rp.routing_point);
 }
 
-async function groupToStation(groupId) {
+async function convertGroupToStation(groupId) {
+  const pattern = /^G\d{2}$/;
+
+  if (!pattern.test(groupId)) return groupId;
+
   const { rows } = await pool.query(
     "SELECT station_id FROM station_groups_main WHERE group_id=$1",
     [groupId]
@@ -39,4 +52,4 @@ async function groupToStation(groupId) {
   return rows[0].station_id;
 }
 
-module.exports = { getRoutingPoints };
+module.exports = { getRoutingPoints, convertGroupToStation };

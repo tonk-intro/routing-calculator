@@ -25,7 +25,9 @@ async function test() {
   // await getCommonRoutingPoint("CBG", "FXN", shortestPathFunc);
   // await getCommonRoutingPoint("HSB", "CPU", shortestPathFunc);
 
-  await getValidRoutingPoints("ASN", "ALM");
+  console.log(await getValidRoutingPoints("ASN", "ALM"));
+  console.log(await getValidRoutingPoints("BYA", "TRI"));
+  console.log(await getValidRoutingPoints("CBG", "LBG"));
 
   //   const fare = await getFare("CBG", "MPL");
 
