@@ -1,17 +1,6 @@
-require("dotenv").config({ path: ".env" });
+require("dotenv").config({ path: "../.env" });
 
-const { getMap, fuseMaps } = require("../db/maps");
-
-async function testMap() {
-  //   await getMap("AA");
-  //MP+CG+EG+FW
-  const one = await getMap("MP");
-  const two = await getMap("CG");
-  const three = await getMap("EG");
-  const four = await getMap("FW");
-
-  return fuseMaps(fuseMaps(fuseMaps(one, two), three), four);
-}
+const { routeToMaps } = require("../logic/route_map");
 
 const express = require("express");
 const app = express();
@@ -20,11 +9,9 @@ const cors = require("cors");
 
 app.use(cors());
 
-console.log(process.env);
-
-app.get("/maps/:id", async (req, res) => {
-  const map = await testMap();
-  res.json(map);
+app.get("/maps/:from/:to", async (req, res) => {
+  const maps = await routeToMaps(req.params.from, req.params.to);
+  res.json(maps);
 });
 
 const PORT = 3000;

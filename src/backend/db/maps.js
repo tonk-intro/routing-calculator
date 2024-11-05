@@ -1,6 +1,19 @@
 const pool = require("../../db_pool");
 
 const { convertGroupToMainStation } = require("./routing");
+const { getStationOrGroupNameById } = require("./stations");
+
+async function routeToMapList(from, to) {
+  //   const fromName = await getStationOrGroupNameById(from);
+  //   const toName = await getStationOrGroupNameById(to);
+
+  const { rows } = await pool.query(
+    "SELECT map_id FROM routes WHERE from_station=$1 AND to_station=$2",
+    [from, to]
+  );
+
+  return rows.map((item) => item.map_id);
+}
 
 async function getMap(mapId) {
   const { rows } = await pool.query(
@@ -57,4 +70,4 @@ function fuseMaps(first, second) {
   return result;
 }
 
-module.exports = { getMap, fuseMaps };
+module.exports = { getMap, fuseMaps, routeToMapList };

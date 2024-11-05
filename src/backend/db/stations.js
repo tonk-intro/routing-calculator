@@ -7,14 +7,14 @@ async function getStationById(id) {
 
   // console.log(rows[0].name);
 
-  return rows[0];
+  return rows[0].name;
 }
 
-async function getStationOrGroupById(id) {
+async function getStationOrGroupNameById(id) {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(id)) {
-    return await getStationByName(id);
+    return await getStationById(id);
   }
 
   const { rows } = await pool.query(
@@ -45,5 +45,5 @@ module.exports = {
   getStationById,
   getStationByName,
   getAllStationIds,
-  getStationOrGroupById,
+  getStationOrGroupNameById,
 };

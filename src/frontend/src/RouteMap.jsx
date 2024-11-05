@@ -15,8 +15,6 @@ import "leaflet/dist/leaflet.css";
 const redOptions = { color: "red" };
 
 export function RouteMap({ data }) {
-  //   console.table(stationData);
-
   const displayStations = [];
   const paths = [];
 
@@ -38,7 +36,7 @@ export function RouteMap({ data }) {
   return (
     <div id="map">
       <MapContainer
-        style={{ width: "100%", height: "calc(100vh - 4rem)" }}
+        style={{ width: "100%", height: "400px" }}
         center={[54.251186, -4.463196]}
         zoom={6}
         scrollWheelZoom={true}

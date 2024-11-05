@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../../.env" });
+require("dotenv").config({ path: "../backend/.env" });
 
 const pool = require("../db_pool");
 const { populateCodeMap } = require("./tables/codemap");
@@ -27,5 +27,5 @@ const mapFile = PREFIX + "RJRG0831.RGL";
 // populateCodeMap(codeMapFile, pool);
 // populateStationGroups(groupFile, pool);
 
-// populateRoutes(routeFile, pool);
-populateMaps(mapFile, pool);
+populateRoutes(routeFile, pool);
+// populateMaps(mapFile, pool);
