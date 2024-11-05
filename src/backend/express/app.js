@@ -13,6 +13,10 @@ async function testMap() {
 const express = require("express");
 const app = express();
 
+const cors = require("cors");
+
+app.use(cors());
+
 console.log(process.env);
 
 app.get("/maps/:id", async (req, res) => {
