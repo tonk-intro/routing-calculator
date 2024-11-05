@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../../.env" });
+require("dotenv").config({ path: ".env" });
 
 const { getFare } = require("./db/fares");
 const { getRoutingPoints, contractStationGroups } = require("./db/routing");
