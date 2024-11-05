@@ -4,10 +4,13 @@ const { getMap, fuseMaps } = require("../db/maps");
 
 async function testMap() {
   //   await getMap("AA");
-  const ce = await getMap("CE");
-  const we = await getMap("WE");
+  //MP+CG+EG+FW
+  const one = await getMap("MP");
+  const two = await getMap("CG");
+  const three = await getMap("EG");
+  const four = await getMap("FW");
 
-  return fuseMaps(ce, we);
+  return fuseMaps(fuseMaps(fuseMaps(one, two), three), four);
 }
 
 const express = require("express");
@@ -21,7 +24,6 @@ console.log(process.env);
 
 app.get("/maps/:id", async (req, res) => {
   const map = await testMap();
-  // code to retrieve an article...
   res.json(map);
 });
 

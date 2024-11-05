@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Map } from "./Map";
+import { RouteMap } from "./RouteMap";
 
 const BACKEND_SERVER = "http://localhost:3000";
 
@@ -12,7 +12,7 @@ function App() {
       .then((res) => setMap(res));
   }, []);
 
-  return <>{map ? <Map data={map} /> : "Loading .. "}</>;
+  return <>{map ? <RouteMap data={map} /> : "Loading .. "}</>;
 }
 
 export default App;
