@@ -39,7 +39,7 @@ export function RouteMap({ data }) {
   return (
     <div id="map">
       <MapContainer
-        style={{ width: "100%", height: "90vh" }}
+        style={{ width: "50%", height: "400px" }}
         center={[54.251186, -4.463196]}
         zoom={6}
         scrollWheelZoom={true}
