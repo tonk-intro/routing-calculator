@@ -24,19 +24,22 @@ export function RouteMap({ data }) {
     displayStations.push(stationConv);
 
     for (const nb of data[stat].neighbours) {
-      const neighbourConv = stationCodeToLatLong(nb);
+      const neighbourConv = stationCodeToLatLong(nb.station);
 
-      paths.push([
-        [stationConv.lat, stationConv.long],
-        [neighbourConv.lat, neighbourConv.long],
-      ]);
+      paths.push({
+        path: [
+          [stationConv.lat, stationConv.long],
+          [neighbourConv.lat, neighbourConv.long],
+        ],
+        colour: nb.colour,
+      });
     }
   }
 
   return (
     <div id="map">
       <MapContainer
-        style={{ width: "100%", height: "400px" }}
+        style={{ width: "100%", height: "90vh" }}
         center={[54.251186, -4.463196]}
         zoom={6}
         scrollWheelZoom={true}
@@ -53,7 +56,7 @@ export function RouteMap({ data }) {
           </Marker>
         ))}
         {paths.map((item) => (
-          <Polygon pathOptions={redOptions} positions={item} />
+          <Polygon pathOptions={{ color: item.colour }} positions={item.path} />
         ))}
       </MapContainer>
     </div>

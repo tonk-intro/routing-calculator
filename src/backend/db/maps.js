@@ -15,7 +15,7 @@ async function routeToMapList(from, to) {
   return rows.map((item) => item.map_id);
 }
 
-async function getMap(mapId) {
+async function getMap(mapId, colour = "red") {
   const { rows } = await pool.query(
     "SELECT from_station, to_station FROM maps WHERE map_id=$1",
     [mapId]
@@ -29,22 +29,25 @@ async function getMap(mapId) {
     r.to_station = await convertGroupToMainStation(r.to_station);
   }
 
-  const map = createMap(rows);
-  console.log(map);
+  const map = createMap(rows, colour);
+  //   console.log(map);
   return map;
 }
 
-function createMap(rows) {
+function createMap(rows, colour) {
   const map = {};
 
   for (item of rows) {
     if (!map[item.from_station]) {
       map[item.from_station] = {
         name: item.from_station,
-        neighbours: [item.to_station],
+        neighbours: [{ station: item.to_station, colour }],
       };
     } else {
-      map[item.from_station].neighbours.push(item.to_station);
+      map[item.from_station].neighbours.push({
+        station: item.to_station,
+        colour,
+      });
     }
   }
 

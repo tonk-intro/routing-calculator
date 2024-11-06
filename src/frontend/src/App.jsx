@@ -7,7 +7,7 @@ function App() {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
-    fetch(BACKEND_SERVER + "/maps/AAP/CRS")
+    fetch(BACKEND_SERVER + "/maps/G12/ELY")
       .then((response) => response.json())
       .then((res) => setMap(res));
   }, []);
