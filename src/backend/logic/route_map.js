@@ -17,10 +17,21 @@ async function getPermittedRoutes(from, to) {
   from = await convertGroupToMainStation(from);
   to = await convertGroupToMainStation(to);
 
+  const outgoing = getOutgoingPaths(allMaps[0].map, "CBG");
+
+  console.log(outgoing);
+
+  //   const paths = filterOutIrrelevantRoutes(allMaps[0].map, "CBG", "NRW");
+
   //   const result = allMaps.map((map) => filterOutIrrelevantRoutes(map, from, to));
 
   return allMaps.map((map) => {
-    return { map: map.map, title: map.title };
+    return {
+      map: map.map,
+      //   map: filterOutIrrelevantRoutes(map.map, from, to),
+
+      title: map.title,
+    };
   });
 
   //  Fuse the maps together.
@@ -34,8 +45,56 @@ async function getPermittedRoutes(from, to) {
   //   return [{ title: `Routes from ${from} to ${to}`, map: combinedMap }];
 }
 
-function filterOutIrrelevantRoutes(map, from, to, visited = []) {
-  // TODO
+// Still not working too well ...
+function filterOutIrrelevantRoutes(inputMap, from, to) {
+  const map = getOutgoingPaths(inputMap, from);
+
+  map[from].predecessors = [];
+
+  const result = {};
+
+  const queue = [to];
+
+  while (queue.length > 0) {
+    const current = queue.splice(0, 1);
+
+    console.log(`Looking at ${current}`);
+    const station = map[current];
+
+    result[current] = { name: map[current].name, neighbours: [] };
+    for (pred of station.predecessors) {
+      result[current].neighbours.push({ station: pred, colour: "red" });
+      queue.push(pred);
+    }
+  }
+
+  return result;
+}
+function getOutgoingPaths(inputMap, from) {
+  const map = structuredClone(inputMap);
+  const visited = [];
+
+  const queue = [from];
+
+  while (queue.length > 0) {
+    const current = queue.splice(0, 1);
+
+    const station = map[current];
+
+    for (nb of station.neighbours) {
+      if (!visited.includes(nb.station)) {
+        visited.push(nb.station);
+        queue.push(nb.station);
+        if (!map[nb.station].predecessors) {
+          map[nb.station].predecessors = [current];
+        } else {
+          map[nb.station].predecessors.push(current);
+        }
+      }
+    }
+  }
+
+  return map;
 }
 
 async function routeToMaps(from, to, colourPicker) {
