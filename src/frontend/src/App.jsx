@@ -7,7 +7,7 @@ function App() {
   const [map, setMap] = useState(null);
 
   const [from, setFrom] = useState("CBG");
-  const [to, setTo] = useState("NRW");
+  const [to, setTo] = useState("G01");
 
   function getRoute(from, to) {
     setMap(null);

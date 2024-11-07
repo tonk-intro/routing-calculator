@@ -17,9 +17,9 @@ async function getPermittedRoutes(from, to) {
   from = await convertGroupToMainStation(from);
   to = await convertGroupToMainStation(to);
 
-  const outgoing = getOutgoingPaths(allMaps[0].map, "CBG");
+  //   const outgoing = getOutgoingPaths(allMaps[0].map, "CBG");
 
-  console.log(outgoing);
+  //   console.log(outgoing);
 
   //   const paths = filterOutIrrelevantRoutes(allMaps[0].map, "CBG", "NRW");
 
@@ -27,8 +27,8 @@ async function getPermittedRoutes(from, to) {
 
   return allMaps.map((map) => {
     return {
-      map: map.map,
-      //   map: filterOutIrrelevantRoutes(map.map, from, to),
+      //   map: map.map,
+      map: filterOutIrrelevantRoutes(map.map, from, to),
 
       title: map.title,
     };
@@ -45,56 +45,52 @@ async function getPermittedRoutes(from, to) {
   //   return [{ title: `Routes from ${from} to ${to}`, map: combinedMap }];
 }
 
-// Still not working too well ...
-function filterOutIrrelevantRoutes(inputMap, from, to) {
-  const map = getOutgoingPaths(inputMap, from);
+function filterOutIrrelevantRoutes(map, from, to) {
+  const routes = [];
 
-  map[from].predecessors = [];
+  findRoutes(map, from, to, [], routes);
 
-  const result = {};
-
-  const queue = [to];
-
-  while (queue.length > 0) {
-    const current = queue.splice(0, 1);
-
-    console.log(`Looking at ${current}`);
-    const station = map[current];
-
-    result[current] = { name: map[current].name, neighbours: [] };
-    for (pred of station.predecessors) {
-      result[current].neighbours.push({ station: pred, colour: "red" });
-      queue.push(pred);
+  const usedStations = routes.reduce((prev, cur) => {
+    const result = [];
+    for (item of cur) {
+      if (!prev.includes(item)) prev.push(item);
     }
-  }
+    return prev;
+  }, []);
 
-  return result;
-}
-function getOutgoingPaths(inputMap, from) {
-  const map = structuredClone(inputMap);
-  const visited = [];
+  const filteredMap = {};
 
-  const queue = [from];
-
-  while (queue.length > 0) {
-    const current = queue.splice(0, 1);
-
-    const station = map[current];
-
-    for (nb of station.neighbours) {
-      if (!visited.includes(nb.station)) {
-        visited.push(nb.station);
-        queue.push(nb.station);
-        if (!map[nb.station].predecessors) {
-          map[nb.station].predecessors = [current];
-        } else {
-          map[nb.station].predecessors.push(current);
+  for (node in map) {
+    if (usedStations.includes(node)) {
+      filteredMap[node] = { name: node, neighbours: [] };
+      for (nb of map[node].neighbours) {
+        if (usedStations.includes(nb.station)) {
+          filteredMap[node].neighbours.push({
+            station: nb.station,
+            colour: nb.colour,
+          });
         }
       }
     }
   }
 
-  return map;
+  return filteredMap;
+}
+
+function findRoutes(map, current, dest, path, allPaths) {
+  path.push(current);
+
+  if (current == dest) {
+    allPaths.push([...path, current]);
+  } else {
+    const lookedAtNbs = [];
+    for (nb of map[current].neighbours) {
+      console.log(`Calling findRoutes for ${nb.station} from ${current}`);
+      if (!path.includes(nb.station))
+        findRoutes(map, nb.station, dest, path, allPaths);
+      lookedAtNbs.push(nb.station);
+    }
+  }
 }
 
 async function routeToMaps(from, to, colourPicker) {
