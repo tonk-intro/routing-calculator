@@ -27,8 +27,8 @@ async function getPermittedRoutes(from, to) {
 
   return allMaps.map((map) => {
     return {
-      //   map: map.map,
-      map: filterOutIrrelevantRoutes(map.map, from, to),
+      map: map.map,
+      //   map: filterOutIrrelevantRoutes(map.map, from, to),
 
       title: map.title,
     };
@@ -49,6 +49,10 @@ function filterOutIrrelevantRoutes(map, from, to) {
   const routes = [];
 
   findRoutes(map, from, to, [], routes);
+
+  console.log("Got the routes");
+
+  //   console.table(routes);
 
   const usedStations = routes.reduce((prev, cur) => {
     const result = [];
@@ -81,16 +85,15 @@ function findRoutes(map, current, dest, path, allPaths) {
   path.push(current);
 
   if (current == dest) {
-    allPaths.push([...path, current]);
+    allPaths.push([...path]);
   } else {
-    const lookedAtNbs = [];
     for (nb of map[current].neighbours) {
-      console.log(`Calling findRoutes for ${nb.station} from ${current}`);
+      //   console.log(`Calling findRoutes for ${nb.station} from ${current}`);
       if (!path.includes(nb.station))
         findRoutes(map, nb.station, dest, path, allPaths);
-      lookedAtNbs.push(nb.station);
     }
   }
+  path.pop();
 }
 
 async function routeToMaps(from, to, colourPicker) {
