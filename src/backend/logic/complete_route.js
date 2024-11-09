@@ -26,6 +26,9 @@ async function getRouteWithAllDetails(from, to) {
   const fromStation = await getStationByName(from);
   const toStation = await getStationByName(to);
 
+  result.fromStation = fromStation;
+  result.toStation = toStation;
+
   if (!shortestPathFunc) throw new Error("call setup first!");
 
   const shared = await getCommonRoutingPoint(
@@ -60,12 +63,25 @@ async function getRouteWithAllDetails(from, to) {
   result.routingPoints = { from: fromRPs, to: toRPs };
 
   result.maps = [];
+  result.londonMaps = { used: false, from: [], to: [] };
 
   for (rp1 of fromRPs) {
     for (rp2 of toRPs) {
       const maps = await getPermittedRoutes(rp1, rp2);
-      for (m of maps) {
+      for (m of maps.regular) {
         result.maps.push({ map: m, route: `${rp1} to ${rp2}` });
+      }
+      for (m of maps.london.to) {
+        result.londonMaps.to.push({
+          map: m,
+          route: `${rp1} to ${rp2} VIA LONDON`,
+        });
+      }
+      for (m of maps.london.from) {
+        result.londonMaps.from.push({
+          map: m,
+          route: `${rp1} to ${rp2} VIA LONDON`,
+        });
       }
     }
   }

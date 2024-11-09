@@ -10,7 +10,7 @@ import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
 
-export function RouteMap({ data }) {
+export function RouteMap({ data, from, to }) {
   const displayStations = [];
   const paths = [];
 
@@ -32,6 +32,9 @@ export function RouteMap({ data }) {
     }
   }
 
+  const fromStation = stationCodeToLatLong(from.id);
+  const toStation = stationCodeToLatLong(to.id);
+
   return (
     <div id="map">
       <MapContainer
@@ -45,12 +48,23 @@ export function RouteMap({ data }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {displayStations.map((item) => (
-          <Marker position={[item.lat, item.long]}>
+          <Marker opacity={0} position={[item.lat, item.long]}>
             <Tooltip direction="right" offset={[0, 20]} opacity={1}>
               {item.name}
             </Tooltip>
           </Marker>
         ))}
+        <Marker position={[fromStation.lat, fromStation.long]}>
+          <Tooltip direction="right" offset={[0, 20]} opacity={1}>
+            {fromStation.name}
+          </Tooltip>
+        </Marker>
+        <Marker position={[toStation.lat, toStation.long]}>
+          <Tooltip direction="right" offset={[0, 20]} opacity={1}>
+            {toStation.name}
+          </Tooltip>
+        </Marker>
+
         {paths.map((item) => (
           <Polygon pathOptions={{ color: item.colour }} positions={item.path} />
         ))}

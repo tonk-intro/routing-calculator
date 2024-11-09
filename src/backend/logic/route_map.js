@@ -25,14 +25,15 @@ async function getPermittedRoutes(from, to) {
 
   //   const result = allMaps.map((map) => filterOutIrrelevantRoutes(map, from, to));
 
-  return allMaps.map((map) => {
-    return {
-      map: map.map,
-      //   map: filterOutIrrelevantRoutes(map.map, from, to),
+  return allMaps;
+  //   return allMaps.map((map) => {
+  //     return {
+  //       map: map.map,
+  //       //   map: filterOutIrrelevantRoutes(map.map, from, to),
 
-      title: map.title,
-    };
-  });
+  //       title: map.title,
+  //     };
+  //   });
 
   //  Fuse the maps together.
 
@@ -97,7 +98,8 @@ function findRoutes(map, current, dest, path, allPaths) {
 }
 
 async function routeToMaps(from, to, colourPicker) {
-  const result = [];
+  const regular = [];
+  const london = { from: [], to: [] }; // London maps = combination of to London / from London
 
   const mapList = await routeToMapList(from, to);
 
@@ -109,21 +111,27 @@ async function routeToMaps(from, to, colourPicker) {
     for (m of maps) {
       if (m == "LO") {
         // LONDON means we need to combine from => G01 => to
-
+        console.log(`Need to deal with LO map`);
         const toLondonMaps = await routeToMaps(from, "G01", colourPicker);
         const fromLondonMaps = await routeToMaps("G01", to, colourPicker);
 
-        toLondonMaps.forEach((toMap) =>
-          fromLondonMaps.forEach((fromMap) => {
-            const finalMap = fuseMaps(fromMap.map, toMap.map);
-            console.log(toMap.title + "," + fromMap.title);
+        toLondonMaps.regular.forEach((toMap) => {
+          london.to.push({
+            from,
+            to: "G01",
+            map: toMap.map,
+            title: toMap.title,
+          });
+        });
 
-            result.push({
-              title: toMap.title + "," + fromMap.title,
-              map: finalMap,
-            });
-          })
-        );
+        fromLondonMaps.regular.forEach((fromMap) => {
+          london.from.push({
+            from: "G01",
+            to,
+            map: fromMap.map,
+            title: fromMap.title,
+          });
+        });
       }
 
       if (!currentMap) {
@@ -133,10 +141,10 @@ async function routeToMaps(from, to, colourPicker) {
       }
     }
     if (mapCombination != "LO")
-      result.push({ title: mapCombination, map: currentMap });
+      regular.push({ title: mapCombination, map: currentMap });
   }
 
-  return result;
+  return { regular, london };
 }
 
 module.exports = { routeToMaps, getPermittedRoutes };
