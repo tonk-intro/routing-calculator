@@ -8,7 +8,7 @@ import {
   Polygon,
 } from "react-leaflet";
 
-import stationCodeToLatLong from "./converter";
+import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
 

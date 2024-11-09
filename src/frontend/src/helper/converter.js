@@ -1,4 +1,4 @@
-import stationData from "./data/stations.json";
+import stationData from "../data/stations.json";
 
 export default function stationCodeToLatLong(code) {
   const station = stationData.find((item) => item.crsCode == code);

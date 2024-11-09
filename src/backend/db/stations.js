@@ -41,9 +41,16 @@ async function getAllStationIds() {
   return rows.map((item) => item.id);
 }
 
+async function getAllStations() {
+  const { rows } = await pool.query("SELECT id, name FROM stations;");
+
+  return rows;
+}
+
 module.exports = {
   getStationById,
   getStationByName,
   getAllStationIds,
   getStationOrGroupNameById,
+  getAllStations,
 };
