@@ -2,17 +2,13 @@ import {
   MapContainer,
   Tooltip,
   TileLayer,
-  useMap,
   Marker,
-  Popup,
   Polygon,
 } from "react-leaflet";
 
 import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
-
-const redOptions = { color: "red" };
 
 export function RouteMap({ data }) {
   const displayStations = [];

@@ -7,7 +7,9 @@ async function getStationById(id) {
 
   // console.log(rows[0].name);
 
-  return rows[0].name;
+  if (rows.length == 0) throw new Error("No Station found for ID " + id);
+
+  return rows[0];
 }
 
 async function getStationOrGroupNameById(id) {
@@ -21,6 +23,7 @@ async function getStationOrGroupNameById(id) {
     "SELECT name FROM station_groups_main WHERE group_id=$1;",
     [id]
   );
+  if (rows.length == 0) throw new Error("No station group found for ID " + id);
 
   return rows[0].name;
 }
@@ -30,7 +33,8 @@ async function getStationByName(name) {
     name,
   ]);
 
-  //   console.log(rows[0].id);
+  if (rows.length == 0)
+    throw new Error("No station group found for Name " + name);
 
   return rows[0];
 }
