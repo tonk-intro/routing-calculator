@@ -47,8 +47,6 @@ function App() {
 
   let count = 1;
 
-  console.log(route);
-
   return (
     <div>
       <StationPicker

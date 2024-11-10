@@ -25,15 +25,45 @@ async function getPermittedRoutes(from, to) {
 
   //   const result = allMaps.map((map) => filterOutIrrelevantRoutes(map, from, to));
 
-  return allMaps;
-  //   return allMaps.map((map) => {
-  //     return {
-  //       map: map.map,
-  //       //   map: filterOutIrrelevantRoutes(map.map, from, to),
+  allMaps.regular = allMaps.regular.map((m) => {
+    return {
+      title: m.title,
+      map: filterOutIrrelevantRoutes(m.map, from, to),
+    };
+  });
 
-  //       title: map.title,
-  //     };
-  //   });
+  allMaps.london.to = await Promise.all(
+    allMaps.london.to.map(async (m) => {
+      return {
+        title: m.title,
+        to: m.to,
+        from: m.from,
+
+        map: filterOutIrrelevantRoutes(
+          m.map,
+          from,
+          await convertGroupToMainStation(m.to)
+        ),
+      };
+    })
+  );
+  allMaps.london.from = await Promise.all(
+    allMaps.london.from.map(async (m) => {
+      return {
+        title: m.title,
+        to: m.to,
+        from: m.from,
+
+        map: filterOutIrrelevantRoutes(
+          m.map,
+          await convertGroupToMainStation(m.from),
+          to
+        ),
+      };
+    })
+  );
+
+  return allMaps;
 
   //  Fuse the maps together.
 
@@ -51,7 +81,7 @@ function filterOutIrrelevantRoutes(map, from, to) {
 
   findRoutes(map, from, to, [], routes);
 
-  console.log("Got the routes");
+  console.log("Got the routes: " + routes);
 
   //   console.table(routes);
 
@@ -82,7 +112,17 @@ function filterOutIrrelevantRoutes(map, from, to) {
   return filteredMap;
 }
 
-function findRoutes(map, current, dest, path, allPaths) {
+function findRoutes(
+  map,
+  current,
+  dest,
+  path,
+  allPaths,
+  counter = { count: 1 }
+) {
+  if (counter.count > 20000) return;
+  counter.count++; // UGLY!! Find the real problem!
+
   path.push(current);
 
   if (current == dest) {
@@ -91,7 +131,7 @@ function findRoutes(map, current, dest, path, allPaths) {
     for (nb of map[current].neighbours) {
       //   console.log(`Calling findRoutes for ${nb.station} from ${current}`);
       if (!path.includes(nb.station))
-        findRoutes(map, nb.station, dest, path, allPaths);
+        findRoutes(map, nb.station, dest, path, allPaths, counter);
     }
   }
   path.pop();
