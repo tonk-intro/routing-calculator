@@ -34,14 +34,35 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
     }
   }
 
+  const coords = {
+    latWest:
+      paths
+        .map((p) => p.path)
+        .map((p) => p[0][0])
+        .sort((a, b) => a - b)[0] + 0.5,
+
+    latEast:
+      paths
+        .map((p) => p.path)
+        .map((p) => p[0][0])
+        .sort((a, b) => b - a)[0] - 0.5,
+    longNorth:
+      paths
+        .map((p) => p.path)
+        .map((p) => p[0][1])
+        .sort((a, b) => a - b)[0] - 0.5,
+
+    longSouth:
+      paths
+        .map((p) => p.path)
+        .map((p) => p[0][1])
+        .sort((a, b) => b - a)[0] + 0.5,
+  };
+
+  console.table(coords);
+
   const fromStation = stationCodeToLatLong(from.id);
   const toStation = stationCodeToLatLong(to.id);
-
-  const center = {
-    lat: (fromStation.lat + toStation.lat) / 2,
-    long: (fromStation.long + toStation.long) / 2,
-    zoom: 6,
-  };
 
   return (
     <div id="map">
@@ -50,10 +71,10 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
         // center={[center.lat, center.long]}
         // zoom={7}
         bounds={[
-          [fromStation.lat, fromStation.long],
-          [toStation.lat, toStation.long],
+          [coords.latWest, coords.longNorth],
+          [coords.latEast, coords.longSouth],
         ]}
-        scrollWheelZoom={center.zoom}
+        // scrollWheelZoom={center.zoom}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
