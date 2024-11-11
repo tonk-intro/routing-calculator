@@ -79,9 +79,10 @@ async function getPermittedRoutes(from, to) {
 function filterOutIrrelevantRoutes(map, from, to) {
   const routes = [];
 
+  console.log(`Map has ${Object.keys(map).length} nodes.`);
   findRoutes(map, from, to, [], routes);
 
-  console.log("Got the routes: " + routes);
+  // console.log("Got the routes: " + routes);
 
   //   console.table(routes);
 
@@ -120,7 +121,10 @@ function findRoutes(
   allPaths,
   counter = { count: 1 }
 ) {
-  if (counter.count > 20000) return;
+  if (counter.count > 10000) {
+    console.log("QUITTING SEARCH");
+    return;
+  }
   counter.count++; // UGLY!! Find the real problem!
 
   path.push(current);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RouteMap } from "./components/RouteMap";
+import RouteMap from "./components/RouteMap";
 import { StationPicker } from "./components/StationPicker";
 
 const BACKEND_SERVER = "http://localhost:3000";
@@ -64,9 +64,11 @@ function App() {
         To:
       </StationPicker>
 
-      <h1>
-        {from} to {to}
-      </h1>
+      {route ? (
+        <h1>
+          {route.fromStation.name} to {route.toStation.name}
+        </h1>
+      ) : null}
 
       {route
         ? route.maps.map((item) => (

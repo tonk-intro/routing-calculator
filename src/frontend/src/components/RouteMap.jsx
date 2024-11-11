@@ -6,11 +6,13 @@ import {
   Polygon,
 } from "react-leaflet";
 
+import { memo } from "react";
+
 import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
 
-export function RouteMap({ data, from, to }) {
+const RouteMap = memo(function RouteMap({ data, from, to }) {
   const displayStations = [];
   const paths = [];
 
@@ -35,13 +37,23 @@ export function RouteMap({ data, from, to }) {
   const fromStation = stationCodeToLatLong(from.id);
   const toStation = stationCodeToLatLong(to.id);
 
+  const center = {
+    lat: (fromStation.lat + toStation.lat) / 2,
+    long: (fromStation.long + toStation.long) / 2,
+    zoom: 6,
+  };
+
   return (
     <div id="map">
       <MapContainer
         style={{ width: "50%", height: "400px" }}
-        center={[54.251186, -4.463196]}
-        zoom={6}
-        scrollWheelZoom={true}
+        // center={[center.lat, center.long]}
+        // zoom={7}
+        bounds={[
+          [fromStation.lat, fromStation.long],
+          [toStation.lat, toStation.long],
+        ]}
+        scrollWheelZoom={center.zoom}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -71,4 +83,6 @@ export function RouteMap({ data, from, to }) {
       </MapContainer>
     </div>
   );
-}
+});
+
+export default RouteMap;
