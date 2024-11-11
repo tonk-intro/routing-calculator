@@ -1,0 +1,21 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 20px;
+  font-family: "Montserrat", sans-serif;
+}
+
+body > div {
+  width: 700px;
+}
+.picker-container {
+  display: flex;
+}
+
+.station-picker {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}

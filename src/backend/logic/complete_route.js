@@ -74,13 +74,13 @@ async function getRouteWithAllDetails(from, to) {
       for (m of maps.london.to) {
         result.londonMaps.to.push({
           map: m,
-          route: `${rp1} to ${rp2} VIA LONDON`,
+          route: `${rp1} to ${rp2} via LONDON`,
         });
       }
       for (m of maps.london.from) {
         result.londonMaps.from.push({
           map: m,
-          route: `${rp1} to ${rp2} VIA LONDON`,
+          route: `${rp1} to ${rp2} via LONDON`,
         });
       }
     }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import RouteMap from "./components/RouteMap";
 import { StationPicker } from "./components/StationPicker";
+import "./style.css";
 
 const BACKEND_SERVER = "http://localhost:3000";
 
@@ -49,57 +50,62 @@ function App() {
 
   return (
     <div>
-      <StationPicker
-        stations={stationList}
-        value={from}
-        onSelected={(st) => setFrom(st)}
-      >
-        From:
-      </StationPicker>
-      <StationPicker
-        value={to}
-        onSelected={(st) => setTo(st)}
-        stations={stationList}
-      >
-        To:
-      </StationPicker>
+      <h1>Permitted Route Calculator</h1>
+      <div className="picker-container">
+        <StationPicker
+          stations={stationList}
+          value={from}
+          onSelected={(st) => setFrom(st)}
+        >
+          From:
+        </StationPicker>
+        <StationPicker
+          value={to}
+          onSelected={(st) => setTo(st)}
+          stations={stationList}
+        >
+          To:
+        </StationPicker>
+      </div>
 
       {route ? (
-        <h1>
+        <h2>
           {route.fromStation.name} to {route.toStation.name}
-        </h1>
+        </h2>
       ) : null}
 
-      {route
-        ? route.maps.map((item) => (
-            <>
-              <h2>
-                {"Map " +
-                  count++ +
-                  ": " +
-                  item.route +
-                  " with Map(s) " +
-                  item.map.title}
-              </h2>
-              <RouteMap
-                data={item.map.map}
-                from={route.fromStation}
-                to={route.toStation}
-              />
-            </>
-          ))
-        : "Loading .. "}
+      {route ? (
+        route.maps.map((item) => (
+          <>
+            <h3>
+              {"Map " +
+                count++ +
+                ": " +
+                item.route +
+                " with Map " +
+                item.map.title}
+            </h3>
+            <RouteMap
+              data={item.map.map}
+              from={route.fromStation}
+              to={route.toStation}
+            />
+          </>
+        ))
+      ) : (
+        <p> Loading ... </p>
+      )}
       {route && route.londonMaps.to.length > 0
         ? route.londonMaps.to.map((item) => (
             <>
-              <h2>
+              <h3>
                 {"Map " +
                   count++ +
                   ": " +
                   item.route +
-                  " with Map(s) " +
+                  " with Map " +
                   item.map.title}
-              </h2>
+              </h3>
               <RouteMap
                 data={item.map.map}
                 from={route.fromStation}
@@ -112,14 +118,14 @@ function App() {
       {route && route.londonMaps.from.length > 0
         ? route.londonMaps.from.map((item) => (
             <>
-              <h2>
+              <h3>
                 {"Map " +
                   count++ +
                   ": " +
                   item.route +
-                  " with Map(s) " +
+                  " with Map " +
                   item.map.title}
-              </h2>
+              </h3>
               <RouteMap
                 data={item.map.map}
                 from={{ id: "EUS" }}

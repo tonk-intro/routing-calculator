@@ -23,7 +23,7 @@ export function StationPicker({
   }
 
   return (
-    <>
+    <div className="station-picker">
       <label htmlFor={key + "station"}>{children}</label>
       <input
         list={id.current + "station-list"}
@@ -37,6 +37,6 @@ export function StationPicker({
           <option key={st.id} value={st.name} />
         ))}
       </datalist>
-    </>
+    </div>
   );
 }

@@ -35,28 +35,24 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
   }
 
   const coords = {
-    latWest:
-      paths
-        .map((p) => p.path)
-        .map((p) => p[0][0])
-        .sort((a, b) => a - b)[0] + 0.5,
+    latWest: paths
+      .map((p) => p.path)
+      .map((p) => p[0][0])
+      .sort((a, b) => a - b)[0],
 
-    latEast:
-      paths
-        .map((p) => p.path)
-        .map((p) => p[0][0])
-        .sort((a, b) => b - a)[0] - 0.5,
-    longNorth:
-      paths
-        .map((p) => p.path)
-        .map((p) => p[0][1])
-        .sort((a, b) => a - b)[0] - 0.5,
+    latEast: paths
+      .map((p) => p.path)
+      .map((p) => p[0][0])
+      .sort((a, b) => b - a)[0],
+    longSouth: paths
+      .map((p) => p.path)
+      .map((p) => p[0][1])
+      .sort((a, b) => a - b)[0],
 
-    longSouth:
-      paths
-        .map((p) => p.path)
-        .map((p) => p[0][1])
-        .sort((a, b) => b - a)[0] + 0.5,
+    longNorth: paths
+      .map((p) => p.path)
+      .map((p) => p[0][1])
+      .sort((a, b) => b - a)[0],
   };
 
   console.table(coords);
@@ -67,9 +63,11 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
   return (
     <div id="map">
       <MapContainer
-        style={{ width: "50%", height: "400px" }}
+        style={{ width: "600px", height: "400px" }}
         // center={[center.lat, center.long]}
         // zoom={7}
+
+        boundsOptions={{ padding: [50, 50] }}
         bounds={[
           [coords.latWest, coords.longNorth],
           [coords.latEast, coords.longSouth],
