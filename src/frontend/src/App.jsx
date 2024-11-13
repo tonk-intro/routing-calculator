@@ -18,7 +18,7 @@ function App() {
     fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
       .then((response) => response.json())
       .then((res) => {
-        console.table(res);
+        // console.table(res);
         if (res.maps != null) {
           // console.log("Setting the map");
           setRoute(res);
@@ -41,7 +41,7 @@ function App() {
       stationList.some((st) => st.name == from) &&
       stationList.some((st) => st.name == to)
     ) {
-      console.log(`Let's fetch fetch route from ${from} to ${to}`);
+      // console.log(`Let's fetch fetch route from ${from} to ${to}`);
       getRoute(from, to);
     }
   }, [from, to, stationList]);
@@ -49,55 +49,35 @@ function App() {
   let count = 1;
 
   return (
-    <div>
-      <h1>Permitted Route Calculator</h1>
-      <div className="picker-container">
-        <StationPicker
-          stations={stationList}
-          value={from}
-          onSelected={(st) => setFrom(st)}
-        >
-          From:
-        </StationPicker>
-        <StationPicker
-          value={to}
-          onSelected={(st) => setTo(st)}
-          stations={stationList}
-        >
-          To:
-        </StationPicker>
-      </div>
+    <>
+      <div>
+        <h1>Permitted Route Calculator</h1>
+        <div className="picker-container">
+          <StationPicker
+            stations={stationList}
+            value={from}
+            onSelected={(st) => setFrom(st)}
+          >
+            From:
+          </StationPicker>
+          <StationPicker
+            value={to}
+            onSelected={(st) => setTo(st)}
+            stations={stationList}
+          >
+            To:
+          </StationPicker>
+        </div>
 
-      {route ? (
-        <h2>
-          {route.fromStation.name} to {route.toStation.name}
-        </h2>
-      ) : null}
+        {route ? (
+          <h2>
+            {route.fromStation.name} to {route.toStation.name}
+          </h2>
+        ) : null}
 
-      {route ? (
-        route.maps.map((item) => (
-          <>
-            <h3>
-              {"Map " +
-                count++ +
-                ": " +
-                item.route +
-                " with Map " +
-                item.map.title}
-            </h3>
-            <RouteMap
-              data={item.map.map}
-              from={route.fromStation}
-              to={route.toStation}
-            />
-          </>
-        ))
-      ) : (
-        <p> Loading ... </p>
-      )}
-      {route && route.londonMaps.to.length > 0
-        ? route.londonMaps.to.map((item) => (
-            <>
+        {route ? (
+          route.maps.map((item) => (
+            <div>
               <h3>
                 {"Map " +
                   count++ +
@@ -109,32 +89,62 @@ function App() {
               <RouteMap
                 data={item.map.map}
                 from={route.fromStation}
-                to={{ id: "EUS" }}
-              />
-            </>
-          ))
-        : null}
-
-      {route && route.londonMaps.from.length > 0
-        ? route.londonMaps.from.map((item) => (
-            <>
-              <h3>
-                {"Map " +
-                  count++ +
-                  ": " +
-                  item.route +
-                  " with Map " +
-                  item.map.title}
-              </h3>
-              <RouteMap
-                data={item.map.map}
-                from={{ id: "EUS" }}
                 to={route.toStation}
               />
-            </>
+            </div>
           ))
-        : null}
-    </div>
+        ) : (
+          <p> Loading ... </p>
+        )}
+      </div>
+      <div className="side-by-side">
+        <div className="container">
+          {route && route.londonMaps.to.length > 0
+            ? route.londonMaps.to.map((item) => (
+                <div>
+                  <h3>
+                    {"Map " +
+                      count++ +
+                      ": " +
+                      item.route +
+                      " with Map " +
+                      item.map.title}
+                  </h3>
+
+                  <RouteMap
+                    data={item.map.map}
+                    from={route.fromStation}
+                    to={{ id: "EUS" }}
+                  ></RouteMap>
+                </div>
+              ))
+            : null}
+        </div>
+
+        <div className="container">
+          {route && route.londonMaps.from.length > 0
+            ? route.londonMaps.from.map((item) => (
+                <div>
+                  <h3>
+                    {"Map " +
+                      count++ +
+                      ": " +
+                      item.route +
+                      " with Map " +
+                      item.map.title}
+                  </h3>
+
+                  <RouteMap
+                    data={item.map.map}
+                    from={{ id: "EUS" }}
+                    to={route.toStation}
+                  ></RouteMap>
+                </div>
+              ))
+            : null}
+        </div>
+      </div>
+    </>
   );
 }
 

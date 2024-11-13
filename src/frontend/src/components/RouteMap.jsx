@@ -4,6 +4,7 @@ import {
   TileLayer,
   Marker,
   Polygon,
+  useMapEvents,
 } from "react-leaflet";
 
 import { memo } from "react";
@@ -12,7 +13,40 @@ import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
 
+function areEqual(prevProps, nextProps) {
+  // console.log("CHECKING EQUALITY");
+  if (
+    prevProps.from.id == nextProps.from.id &&
+    prevProps.to.id == nextProps.to.id
+  ) {
+    console.log(prevProps);
+    return true;
+  }
+
+  return false;
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+}
+
+function MapEvents() {
+  const map = useMapEvents({
+    click: () => {
+      map.scrollWheelZoom.enable();
+    },
+    mouseout: () => {
+      // alert("Left");
+      map.scrollWheelZoom.disable();
+    },
+  });
+
+  return null;
+}
+
 const RouteMap = memo(function RouteMap({ data, from, to }) {
+  console.log("RE-RENDERING");
   const displayStations = [];
   const paths = [];
 
@@ -55,6 +89,11 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
       .sort((a, b) => b - a)[0],
   };
 
+  if (coords.latWest == null) {
+    // TODO: This shouldn't really happen, apparently we are getting an empty map?!
+    throw new Error("It seems that the map was empty!?");
+    // return null;
+  }
   console.table(coords);
 
   const fromStation = stationCodeToLatLong(from.id);
@@ -72,8 +111,9 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
           [coords.latWest, coords.longNorth],
           [coords.latEast, coords.longSouth],
         ]}
-        // scrollWheelZoom={center.zoom}
+        scrollWheelZoom={false}
       >
+        <MapEvents />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -102,6 +142,6 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
       </MapContainer>
     </div>
   );
-});
+}, areEqual);
 
 export default RouteMap;

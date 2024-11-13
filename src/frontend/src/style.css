@@ -8,8 +8,16 @@ body {
 }
 
 body > div {
-  width: 700px;
+  min-width: 700px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+body > div > div {
+  min-width: 700px;
+}
+
 .picker-container {
   display: flex;
 }
@@ -18,4 +26,14 @@ body > div {
   display: flex;
   gap: 10px;
   flex: 1;
+}
+
+.side-by-side {
+  display: flex;
+  gap: 30px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
 }

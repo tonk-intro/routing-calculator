@@ -121,7 +121,7 @@ function findRoutes(
   allPaths,
   counter = { count: 1 }
 ) {
-  if (counter.count > 10000) {
+  if (counter.count > 20000) {
     console.log("QUITTING SEARCH");
     return;
   }
