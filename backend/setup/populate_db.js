@@ -1,6 +1,6 @@
 require("dotenv").config({ path: "../backend/.env" });
 
-const pool = require("../db_pool");
+const pool = require("../../db_pool");
 const { populateCodeMap } = require("./tables/codemap");
 const populateDistances = require("./tables/distances");
 const { populateFares } = require("./tables/fares");
