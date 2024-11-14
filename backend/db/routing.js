@@ -1,4 +1,4 @@
-const pool = require("../../db_pool");
+const pool = require("./pool");
 const { getStationById } = require("./stations");
 
 async function getRoutingPoints(stationId) {
@@ -25,8 +25,6 @@ async function getRoutingPoints(stationId) {
     }
 
     return [rows[0].routing_group];
-
-    // console.log("RP for " + stationId + " is " + );
   }
 
   return rows.map((rp) => rp.routing_point);

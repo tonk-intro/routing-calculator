@@ -1,19 +1,19 @@
 require("dotenv").config({ path: ".env" });
 
-const { getFare } = require("./db/fares");
-const { getRoutingPoints, contractStationGroups } = require("./db/routing");
-const { getStationByName, getStationOrGroupById } = require("./db/stations");
+const { getFare } = require("../db/fares");
+const { getRoutingPoints, contractStationGroups } = require("../db/routing");
+const { getStationByName, getStationOrGroupById } = require("../db/stations");
 const {
   getCommonRoutingPoint,
   getValidRoutingPoints,
-} = require("./logic/routing_points");
-const { getStationById, getAllStationIds } = require("./db/stations");
+} = require("../logic/routing_points");
+const { getStationById, getAllStationIds } = require("../db/stations");
 
-const { getNeighbours, getDistance } = require("./db/distances");
+const { getNeighbours, getDistance } = require("../db/distances");
 
-const { createRailwayGraph } = require("./logic/graph");
+const { createRailwayGraph } = require("../logic/graph");
 
-const { shortestPath } = require("./logic/dijkstra");
+const { shortestPath } = require("../logic/dijkstra");
 
 async function test() {
   const allTheStations = await getAllStationIds();

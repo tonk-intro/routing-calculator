@@ -1,4 +1,4 @@
-const pool = require("../../db_pool");
+const pool = require("./pool");
 
 async function getNeighbours(station) {
   const { rows } = await pool.query(

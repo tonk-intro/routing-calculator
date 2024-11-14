@@ -1,4 +1,4 @@
-const pool = require("../../db_pool");
+const pool = require("./pool");
 
 async function getStationById(id) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE id=$1;", [

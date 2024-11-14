@@ -1,7 +1,7 @@
 require("dotenv").config({ path: ".env" });
 
-const { getMap, fuseMaps, routeToMapList } = require("./db/maps");
-const { routeToMaps } = require("./logic/route_map");
+const { getMap, fuseMaps, routeToMapList } = require("../db/maps");
+const { routeToMaps } = require("../logic/route_map");
 
 async function test() {
   //   await getMap("AA");

@@ -1,12 +1,8 @@
-const pool = require("../../db_pool");
+const pool = require("./pool");
 
 const { convertGroupToMainStation } = require("./routing");
-const { getStationOrGroupNameById } = require("./stations");
 
 async function routeToMapList(from, to) {
-  //   const fromName = await getStationOrGroupNameById(from);
-  //   const toName = await getStationOrGroupNameById(to);
-
   const { rows } = await pool.query(
     "SELECT map_id FROM routes WHERE from_station=$1 AND to_station=$2",
     [from, to]

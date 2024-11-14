@@ -1,4 +1,4 @@
-const pool = require("../../db_pool");
+const pool = require("./pool");
 
 // const { convertGroupToStation } = require("./routing");
 

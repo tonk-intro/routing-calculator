@@ -1,10 +1,10 @@
 const { getNeighbours } = require("../db/distances");
-const { createRailwayGraph } = require("./graph");
-const { shortestPath } = require("./dijkstra");
+const { createRailwayGraph } = require("../logic/graph");
+const { shortestPath } = require("../logic/dijkstra");
 const { getAllStationIds, getStationByName } = require("../db/stations");
-const { getCommonRoutingPoint } = require("./routing_points");
+const { getCommonRoutingPoint } = require("../logic/routing_points");
 const { getRoutingPoints } = require("../db/routing");
-const { getPermittedRoutes } = require("./route_map");
+const { getPermittedRoutes } = require("../logic/route_map");
 
 let shortestPathFunc = null;
 
@@ -16,6 +16,8 @@ async function setup() {
 }
 // Input names of target and destination station
 async function getRouteWithAllDetails(from, to) {
+  if (!shortestPathFunc) throw new Error("call setup first!");
+
   const result = { haveSharedRP: false, error: false };
 
   if (from == to) {
@@ -28,8 +30,6 @@ async function getRouteWithAllDetails(from, to) {
 
   result.fromStation = fromStation;
   result.toStation = toStation;
-
-  if (!shortestPathFunc) throw new Error("call setup first!");
 
   const shared = await getCommonRoutingPoint(
     fromStation.id,
