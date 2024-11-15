@@ -46,7 +46,9 @@ async function getAllStationIds() {
 }
 
 async function getAllStations() {
-  const { rows } = await pool.query("SELECT id, name FROM stations;");
+  const { rows } = await pool.query(
+    "SELECT id, name, lat, long FROM stations JOIN locations ON stations.id = locations.station_id;"
+  );
 
   return rows;
 }

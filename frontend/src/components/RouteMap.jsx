@@ -45,18 +45,18 @@ function MapEvents() {
   return null;
 }
 
-const RouteMap = memo(function RouteMap({ data, from, to }) {
+const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
   console.log("RE-RENDERING");
   const displayStations = [];
   const paths = [];
 
   for (const stat in data) {
-    const stationConv = stationCodeToLatLong(stat);
+    const stationConv = stationCodeToLatLong(stationList, stat);
 
     displayStations.push(stationConv);
 
     for (const nb of data[stat].neighbours) {
-      const neighbourConv = stationCodeToLatLong(nb.station);
+      const neighbourConv = stationCodeToLatLong(stationList, nb.station);
 
       paths.push({
         path: [
@@ -96,8 +96,8 @@ const RouteMap = memo(function RouteMap({ data, from, to }) {
   }
   console.table(coords);
 
-  const fromStation = stationCodeToLatLong(from.id);
-  const toStation = stationCodeToLatLong(to.id);
+  const fromStation = stationCodeToLatLong(stationList, from.id);
+  const toStation = stationCodeToLatLong(stationList, to.id);
 
   return (
     <div id="map">

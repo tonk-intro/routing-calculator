@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../backend/.env" });
+require("dotenv").config({ path: "../.env" });
 
 const pool = require("../db/pool");
 const { populateCodeMap } = require("./tables/codemap");
@@ -11,6 +11,7 @@ const { populateStationGroups } = require("./tables/groups");
 
 const { populateRoutes } = require("./tables/routes");
 const { populateMaps } = require("./tables/maps");
+const { populateLocations } = require("./tables/locations");
 
 const PREFIX = "../../private/routing_data/";
 const stationsFile = PREFIX + "RJRG0831.RGS";
@@ -20,6 +21,7 @@ const faresFile = PREFIX + "nfm64";
 const groupFile = PREFIX + "RJRG0831.RGG";
 const routeFile = PREFIX + "RJRG0831.RGR";
 const mapFile = PREFIX + "RJRG0831.RGL";
+const locationFile = PREFIX + "stations.csv";
 
 // populateFares(faresFile, pool); // It's a monster!!
 // populateStations(stationsFile, pool);
@@ -27,5 +29,7 @@ const mapFile = PREFIX + "RJRG0831.RGL";
 // populateCodeMap(codeMapFile, pool);
 // populateStationGroups(groupFile, pool);
 
-populateRoutes(routeFile, pool);
+// populateRoutes(routeFile, pool);
 // populateMaps(mapFile, pool);
+
+populateLocations(locationFile, pool);

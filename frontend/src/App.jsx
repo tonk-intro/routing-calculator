@@ -87,6 +87,7 @@ function App() {
                   item.map.title}
               </h3>
               <RouteMap
+                stationList={stationList}
                 data={item.map.map}
                 from={route.fromStation}
                 to={route.toStation}
@@ -112,6 +113,7 @@ function App() {
                   </h3>
 
                   <RouteMap
+                    stationList={stationList}
                     data={item.map.map}
                     from={route.fromStation}
                     to={{ id: "EUS" }}
@@ -135,6 +137,7 @@ function App() {
                   </h3>
 
                   <RouteMap
+                    stationList={stationList}
                     data={item.map.map}
                     from={{ id: "EUS" }}
                     to={route.toStation}
