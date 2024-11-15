@@ -21,4 +21,22 @@ describe("Map Selection", () => {
       result.maps.some((item) => item.map.title == "YM,BY,CA")
     ).toBeTruthy();
   });
+
+  // A passenger wants to go from Lydney to Church Stretton.
+  // The info in the official documentation seems out of date.
+  // Routing Points: NWP, GCR, G05 ==> CRV
+  // SHR is NOT a valid RP!
+  // Maps: MC, WT+MC, PB+CA, MP
+  test("Lydney to Church Stretton", async () => {
+    const result = await getRouteWithAllDetails("Lydney", "Church Stretton");
+
+    expect(result.routingPoints.from).toEqual(["NWP", "GCR", "G05"]);
+    expect(result.routingPoints.to).toEqual(["CRV"]);
+
+    expect(
+      result.maps.reduce((prev, cur) => {
+        return [...prev, cur.map.title];
+      }, [])
+    ).toEqual(["MC", "PB,CA", "WT,MC", "MP"]);
+  });
 });

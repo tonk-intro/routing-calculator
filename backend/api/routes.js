@@ -3,7 +3,7 @@ const { createRailwayGraph } = require("../logic/graph");
 const { shortestPath } = require("../logic/dijkstra");
 const { getAllStationIds, getStationByName } = require("../db/stations");
 const { getCommonRoutingPoint } = require("../logic/routing_points");
-const { getRoutingPoints } = require("../db/routing");
+const { getValidRoutingPoints } = require("../logic/routing_points");
 const { getPermittedRoutes } = require("../logic/route_map");
 
 let shortestPathFunc = null;
@@ -45,19 +45,21 @@ async function getRouteWithAllDetails(from, to) {
 
   // No common RPs!
 
-  let fromRPs, toRPs;
+  const validRPs = await getValidRoutingPoints(fromStation.id, toStation.id);
 
-  try {
-    fromRPs = await getRoutingPoints(fromStation.id);
-    toRPs = await getRoutingPoints(toStation.id);
-  } catch (err) {
-    result.error = true;
-    result.errorMessage = {
-      text: `Couldn't resolve RPS from ${fromStation.name} to ${toStation.name}`,
-      object: err,
-    };
-    return result;
-  }
+  const fromRPs = validRPs.from;
+  const toRPs = validRPs.to;
+
+  console.log(fromRPs);
+  // }
+  // catch (err) {
+  //   result.error = true;
+  //   result.errorMessage = {
+  //     text: `Couldn't resolve RPS from ${fromStation.name} to ${toStation.name}`,
+  //     object: err,
+  //   };
+  //   return result;
+  // }
 
   result.routingPoints = { from: fromRPs, to: toRPs };
 
@@ -68,19 +70,25 @@ async function getRouteWithAllDetails(from, to) {
     for (rp2 of toRPs) {
       const maps = await getPermittedRoutes(rp1, rp2);
       for (m of maps.regular) {
-        result.maps.push({ map: m, route: `${rp1} to ${rp2}` });
+        if (!result.maps.some((item) => item.map.title == m.title)) {
+          result.maps.push({ map: m, route: `${rp1} to ${rp2}` });
+        }
       }
       for (m of maps.london.to) {
-        result.londonMaps.to.push({
-          map: m,
-          route: `${rp1} to ${rp2} via LONDON`,
-        });
+        if (!result.londonMaps.to.some((item) => item.map.title == m.title)) {
+          result.londonMaps.to.push({
+            map: m,
+            route: `${rp1} to ${rp2} via LONDON`,
+          });
+        }
       }
       for (m of maps.london.from) {
-        result.londonMaps.from.push({
-          map: m,
-          route: `${rp1} to ${rp2} via LONDON`,
-        });
+        if (!result.londonMaps.from.some((item) => item.map.title == m.title)) {
+          result.londonMaps.from.push({
+            map: m,
+            route: `${rp1} to ${rp2} via LONDON`,
+          });
+        }
       }
     }
   }

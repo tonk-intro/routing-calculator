@@ -79,7 +79,7 @@ async function getPermittedRoutes(from, to) {
 function filterOutIrrelevantRoutes(map, from, to) {
   const routes = [];
 
-  console.log(`Map has ${Object.keys(map).length} nodes.`);
+  // console.log(`Map has ${Object.keys(map).length} nodes.`);
   findRoutes(map, from, to, [], routes);
 
   // console.log("Got the routes: " + routes);
@@ -122,7 +122,7 @@ function findRoutes(
   counter = { count: 1 }
 ) {
   if (counter.count > 20000) {
-    console.log("QUITTING SEARCH");
+    // console.log("QUITTING SEARCH");
     return;
   }
   counter.count++; // UGLY!! Find the real problem!
@@ -155,7 +155,7 @@ async function routeToMaps(from, to, colourPicker) {
     for (m of maps) {
       if (m == "LO") {
         // LONDON means we need to combine from => G01 => to
-        console.log(`Need to deal with LO map`);
+        // console.log(`Need to deal with LO map`);
         const toLondonMaps = await routeToMaps(from, "G01", colourPicker);
         const fromLondonMaps = await routeToMaps("G01", to, colourPicker);
 

@@ -1,4 +1,8 @@
-const { getRoutingPoints, expandStationGroups } = require("../db/routing");
+const {
+  getRoutingPoints,
+  expandStationGroups,
+  contractStationGroups,
+} = require("../db/routing");
 const { getFare } = require("./../db/fares");
 
 async function getCommonRoutingPoint(from, to, shortestPath) {
@@ -26,59 +30,69 @@ async function getValidRoutingPoints(from, to) {
   let rpFrom = await getRoutingPoints(from);
   let rpTo = await getRoutingPoints(to);
 
-  if (rpFrom.length + rpTo.length == 2) return { from: rpFrom, to: rpTo };
-
-  rpFrom = await expandStationGroups(rpFrom);
-  rpTo = await expandStationGroups(rpTo);
-
   const validFrom = [];
   const validTo = [];
 
   let fare1, fare2;
 
-  for (rp of rpTo) {
-    try {
-      fare1 = await getFare(from, rp);
-      fare2 = await getFare(from, to);
-    } catch (err) {
-      console.log("ERROR: " + err);
-      // No fare could be determined for one of the routes.
-      // Based on the documentation it is not very clear to me what is supposed to happen.
-      // For now: regard route as invalid
+  if (rpTo.length == 1) {
+    validTo.push(rpTo[0]);
+  } else {
+    rpTo = await expandStationGroups(rpTo);
 
-      continue;
-    }
+    for (rp of rpTo) {
+      try {
+        fare1 = await getFare(from, rp);
+        fare2 = await getFare(from, to);
+      } catch (err) {
+        console.log("ERROR: " + err);
+        // No fare could be determined for one of the routes.
+        // Based on the documentation it is not very clear to me what is supposed to happen.
+        // For now: regard route as invalid
 
-    if (fare1.fare - fare2.fare > 0) {
-      // console.log(`${rp} not valid!`);
-    } else {
-      // console.log(`${rp} valid!`);
-      validTo.push(rp);
-    }
-  }
+        continue;
+      }
 
-  for (rp of rpFrom) {
-    try {
-      fare1 = await getFare(rp, to);
-      fare2 = await getFare(from, to);
-    } catch (err) {
-      console.log("ERROR: " + err);
-      // No fare could be determined for one of the routes.
-      // Based on the documentation it is not very clear to me what is supposed to happen.
-      // For now: regard route as invalid
-
-      continue;
-    }
-
-    if (fare1.fare - fare2.fare > 0) {
-      // console.log(`${rp} not valid!`);
-    } else {
-      // console.log(`${rp} valid!`);
-      validFrom.push(rp);
+      if (fare1.fare - fare2.fare > 0) {
+        // console.log(`${rp} not valid!`);
+      } else {
+        // console.log(`${rp} valid!`);
+        validTo.push(rp);
+      }
     }
   }
 
-  return { from: validFrom, to: validTo };
+  if (rpFrom.length == 1) {
+    validFrom.push(rpFrom[0]);
+  } else {
+    rpFrom = await expandStationGroups(rpFrom);
+
+    for (rp of rpFrom) {
+      try {
+        fare1 = await getFare(rp, to);
+        fare2 = await getFare(from, to);
+      } catch (err) {
+        console.log("ERROR: " + err);
+        // No fare could be determined for one of the routes.
+        // Based on the documentation it is not very clear to me what is supposed to happen.
+        // For now: regard route as invalid
+
+        continue;
+      }
+
+      if (fare1.fare - fare2.fare > 0) {
+        // console.log(`${rp} not valid!`);
+      } else {
+        // console.log(`${rp} valid!`);
+        validFrom.push(rp);
+      }
+    }
+  }
+
+  return {
+    from: await contractStationGroups(validFrom),
+    to: await contractStationGroups(validTo),
+  };
 }
 
 module.exports = { getCommonRoutingPoint, getValidRoutingPoints };

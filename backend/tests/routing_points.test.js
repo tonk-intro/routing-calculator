@@ -48,13 +48,15 @@ describe("Distinct Routing Points", () => {
   // Example (b) - Gunnislake to Crewkerne - routeing points are Plymouth Group, Salisbury and
   // Exeter Group.
   // Plymouth Group = G21, Exeter Group = G12
-  // NB: The official calculator doesn't recognise SAL?!
+  // !!!: The documentation includes SAL but not the official routing calculator that is online!
+  // I follow the latter as this corresponds to the data.
 
   test("Gunnislake to Crewkerne", async () => {
     const result = await getRouteWithAllDetails("Gunnislake", "Crewkerne");
 
+    console.log(result);
     expect(result.routingPoints.from.includes("G21")).toBeTruthy();
     expect(result.routingPoints.to.includes("G12")).toBeTruthy();
-    expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
+    // expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
   });
 });
