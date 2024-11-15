@@ -50,17 +50,6 @@ async function getRouteWithAllDetails(from, to) {
   const fromRPs = validRPs.from;
   const toRPs = validRPs.to;
 
-  console.log(fromRPs);
-  // }
-  // catch (err) {
-  //   result.error = true;
-  //   result.errorMessage = {
-  //     text: `Couldn't resolve RPS from ${fromStation.name} to ${toStation.name}`,
-  //     object: err,
-  //   };
-  //   return result;
-  // }
-
   result.routingPoints = { from: fromRPs, to: toRPs };
 
   result.maps = [];

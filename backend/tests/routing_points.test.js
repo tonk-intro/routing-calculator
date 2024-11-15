@@ -59,4 +59,22 @@ describe("Distinct Routing Points", () => {
     expect(result.routingPoints.to.includes("G12")).toBeTruthy();
     // expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
   });
+
+  // Example 1: HERNE BAY TO GRAVESEND
+  test("Herne Bay to Gravesend", async () => {
+    const result = await getRouteWithAllDetails("Herne Bay", "Gravesend");
+    expect(result.routingPoints.from).toEqual(["FAV"]);
+    expect(result.routingPoints.to).toEqual(["GRV"]);
+  });
+
+  // Example 2: PAR TO PONTYPRIDD
+  // For some reason one cannot put Par into the official route calculator
+  // I am therefore using nearbby Lostwithiel instead
+
+  test("Lostwithiel to Pontypridd", async () => {
+    const result = await getRouteWithAllDetails("Lostwithiel", "Pontypridd");
+
+    expect(result.routingPoints.from).toEqual(["LSK"]);
+    expect(result.routingPoints.to).toEqual(["PPD"]);
+  });
 });

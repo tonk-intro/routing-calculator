@@ -1,9 +1,9 @@
-const {
-  getRoutingPoints,
-  expandStationGroups,
-  contractStationGroups,
-} = require("../db/routing");
+const { getRoutingPoints } = require("../db/routing");
 const { getFare } = require("./../db/fares");
+const {
+  convertStationToGroup,
+  convertGroupToStations,
+} = require("../db/routing");
 
 async function getCommonRoutingPoint(from, to, shortestPath) {
   const rpFrom = await getRoutingPoints(from);
@@ -93,6 +93,32 @@ async function getValidRoutingPoints(from, to) {
     from: await contractStationGroups(validFrom),
     to: await contractStationGroups(validTo),
   };
+}
+
+// takes an array of routing points and returns array where routing groups (e.g. G01)
+// are replaced by all the group members
+async function expandStationGroups(routingPoints) {
+  const result = [];
+  for (rp of routingPoints) {
+    const transformed = await convertGroupToStations(rp);
+    transformed.forEach((item) => result.push(item));
+  }
+
+  return result;
+}
+
+// Takes array of touring points and collapses the stations that have routing groups into them
+async function contractStationGroups(routingPoints) {
+  const result = [];
+
+  for (rp of routingPoints) {
+    const conv = await convertStationToGroup(rp);
+    if (!result.includes(conv)) {
+      result.push(conv);
+    }
+  }
+
+  return result;
 }
 
 module.exports = { getCommonRoutingPoint, getValidRoutingPoints };

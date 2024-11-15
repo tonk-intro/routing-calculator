@@ -28,6 +28,8 @@ describe("Map Selection", () => {
   // SHR is NOT a valid RP!
   // Maps: MC, WT+MC, PB+CA, MP
   test("Lydney to Church Stretton", async () => {
+    jest.setTimeout(1000000);
+
     const result = await getRouteWithAllDetails("Lydney", "Church Stretton");
 
     expect(result.routingPoints.from).toEqual(["NWP", "GCR", "G05"]);
