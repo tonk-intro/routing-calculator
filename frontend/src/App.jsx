@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import RouteMap from "./components/RouteMap";
 import { StationPicker } from "./components/StationPicker";
 import "./style.css";
+import MapContainer from "./components/MapContainer";
 
 const BACKEND_SERVER = "http://localhost:3000";
 
@@ -44,8 +45,6 @@ function App() {
     }
   }, [from, to, stationList]);
 
-  let count = 1;
-
   return (
     <>
       <div>
@@ -66,90 +65,28 @@ function App() {
             To:
           </StationPicker>
         </div>
-
-        {route ? (
-          <h2>
-            {route.fromStation.name} to {route.toStation.name}
-          </h2>
-        ) : null}
-
-        {route ? (
-          route.maps.map((item, index) => (
-            <div key={index}>
-              <h3>
-                {"Map " +
-                  count++ +
-                  ": " +
-                  item.from +
-                  " to " +
-                  item.to +
-                  " with Map " +
-                  item.map.title}
-              </h3>
-              <RouteMap
-                stationList={stationList}
-                data={item.map.map}
-                from={item.from}
-                to={item.to}
-              />
-            </div>
-          ))
-        ) : (
-          <p> Loading ... </p>
-        )}
       </div>
+
+      <MapContainer stationList={stationList} maps={route && route.maps}>
+        <h2>
+          {route && route.fromStation.name} to {route && route.toStation.name}
+        </h2>
+      </MapContainer>
+
       <div className="side-by-side">
-        <div className="container">
-          {route && route.londonMaps.to.length > 0
-            ? route.londonMaps.to.map((item, index) => (
-                <div key={index}>
-                  <h3>
-                    {"Map " +
-                      count++ +
-                      ": " +
-                      item.from +
-                      " to " +
-                      item.to +
-                      " with Map " +
-                      item.map.title}
-                  </h3>
+        <MapContainer
+          stationList={stationList}
+          maps={route && route.londonMaps.to}
+        >
+          <h2>{route && route.fromStation.name} to London</h2>
+        </MapContainer>
 
-                  <RouteMap
-                    stationList={stationList}
-                    data={item.map.map}
-                    from={item.from}
-                    to={item.to}
-                  ></RouteMap>
-                </div>
-              ))
-            : null}
-        </div>
-
-        <div className="container">
-          {route && route.londonMaps.from.length > 0
-            ? route.londonMaps.from.map((item, index) => (
-                <div key={index}>
-                  <h3>
-                    {"Map " +
-                      count++ +
-                      ": " +
-                      item.from +
-                      " to " +
-                      item.to +
-                      " with Map " +
-                      item.map.title}
-                  </h3>
-
-                  <RouteMap
-                    stationList={stationList}
-                    data={item.map.map}
-                    from={item.from}
-                    to={item.to}
-                  ></RouteMap>
-                </div>
-              ))
-            : null}
-        </div>
+        <MapContainer
+          stationList={stationList}
+          maps={route && route.londonMaps.from}
+        >
+          <h2>London to {route && route.toStation.name}</h2>
+        </MapContainer>
       </div>
     </>
   );

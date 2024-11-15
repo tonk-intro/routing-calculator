@@ -186,7 +186,7 @@ async function routeToMaps(from, to, colourPicker) {
     }
     if (mapCombination != "LO")
       regular.push({
-        title: mapCombination.replace(",", "+"),
+        title: mapCombination.replaceAll(",", "+"),
         map: currentMap,
       });
   }

@@ -54,7 +54,7 @@ async function getRouteWithAllDetails(from, to) {
   result.routingPoints = { from: fromRPs, to: toRPs };
 
   result.maps = [];
-  result.londonMaps = { used: false, from: [], to: [] };
+  result.londonMaps = { from: [], to: [] };
 
   for (rp1 of fromRPs) {
     for (rp2 of toRPs) {
