@@ -11,7 +11,6 @@ let shortestPathFunc = null;
 async function setup() {
   const allTheStations = await getAllStationIds();
   const stationsGraph = await createRailwayGraph(allTheStations, getNeighbours);
-
   shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
 }
 // Input names of target and destination station

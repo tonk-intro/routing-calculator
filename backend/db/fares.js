@@ -1,5 +1,4 @@
 const pool = require("./pool");
-
 // const { convertGroupToStation } = require("./routing");
 
 async function getFare(from, to) {

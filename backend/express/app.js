@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: ".env" });
 
 const { getAllStations } = require("../api/stations");
 const { getRouteWithAllDetails, setup } = require("../api/routes");
