@@ -26,7 +26,6 @@ describe("Common Routing Points", () => {
 
     expect(result.haveSharedRP).toBeTruthy();
     expect(result.sharedRP).toBe("TON");
-    console.log(result);
   });
 
   // Example (c) - Helsby to Capenhurst. Each station has two common routeing points, Chester (13
@@ -38,6 +37,24 @@ describe("Common Routing Points", () => {
 
     expect(result.haveSharedRP).toBeTruthy();
     expect(result.sharedRP).toBe("HOO");
-    console.log(result);
+  });
+});
+
+describe("Distinct Routing Points", () => {
+  beforeAll(async () => {
+    await setup();
+  });
+
+  // Example (b) - Gunnislake to Crewkerne - routeing points are Plymouth Group, Salisbury and
+  // Exeter Group.
+  // Plymouth Group = G21, Exeter Group = G12
+  // NB: The official calculator doesn't recognise SAL?!
+
+  test("Gunnislake to Crewkerne", async () => {
+    const result = await getRouteWithAllDetails("Gunnislake", "Crewkerne");
+
+    expect(result.routingPoints.from.includes("G21")).toBeTruthy();
+    expect(result.routingPoints.to.includes("G12")).toBeTruthy();
+    expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
   });
 });
