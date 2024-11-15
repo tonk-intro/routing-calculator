@@ -18,9 +18,7 @@ function App() {
     fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
       .then((response) => response.json())
       .then((res) => {
-        // console.table(res);
         if (res.maps != null) {
-          // console.log("Setting the map");
           setRoute(res);
         }
       });
@@ -76,21 +74,23 @@ function App() {
         ) : null}
 
         {route ? (
-          route.maps.map((item) => (
-            <div>
+          route.maps.map((item, index) => (
+            <div key={index}>
               <h3>
                 {"Map " +
                   count++ +
                   ": " +
-                  item.route +
+                  item.from +
+                  " to " +
+                  item.to +
                   " with Map " +
                   item.map.title}
               </h3>
               <RouteMap
                 stationList={stationList}
                 data={item.map.map}
-                from={route.fromStation}
-                to={route.toStation}
+                from={item.from}
+                to={item.to}
               />
             </div>
           ))
@@ -101,13 +101,15 @@ function App() {
       <div className="side-by-side">
         <div className="container">
           {route && route.londonMaps.to.length > 0
-            ? route.londonMaps.to.map((item) => (
-                <div>
+            ? route.londonMaps.to.map((item, index) => (
+                <div key={index}>
                   <h3>
                     {"Map " +
                       count++ +
                       ": " +
-                      item.route +
+                      item.from +
+                      " to " +
+                      item.to +
                       " with Map " +
                       item.map.title}
                   </h3>
@@ -115,8 +117,8 @@ function App() {
                   <RouteMap
                     stationList={stationList}
                     data={item.map.map}
-                    from={route.fromStation}
-                    to={{ id: "EUS" }}
+                    from={item.from}
+                    to={item.to}
                   ></RouteMap>
                 </div>
               ))
@@ -125,13 +127,15 @@ function App() {
 
         <div className="container">
           {route && route.londonMaps.from.length > 0
-            ? route.londonMaps.from.map((item) => (
-                <div>
+            ? route.londonMaps.from.map((item, index) => (
+                <div key={index}>
                   <h3>
                     {"Map " +
                       count++ +
                       ": " +
-                      item.route +
+                      item.from +
+                      " to " +
+                      item.to +
                       " with Map " +
                       item.map.title}
                   </h3>
@@ -139,8 +143,8 @@ function App() {
                   <RouteMap
                     stationList={stationList}
                     data={item.map.map}
-                    from={{ id: "EUS" }}
-                    to={route.toStation}
+                    from={item.from}
+                    to={item.to}
                   ></RouteMap>
                 </div>
               ))

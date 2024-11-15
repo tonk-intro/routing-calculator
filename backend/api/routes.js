@@ -5,6 +5,7 @@ const { getAllStationIds, getStationByName } = require("../db/stations");
 const { getCommonRoutingPoint } = require("../logic/routing_points");
 const { getValidRoutingPoints } = require("../logic/routing_points");
 const { getPermittedRoutes } = require("../logic/route_map");
+const { convertGroupToMainStation } = require("../db/routing");
 
 let shortestPathFunc = null;
 
@@ -60,14 +61,19 @@ async function getRouteWithAllDetails(from, to) {
       const maps = await getPermittedRoutes(rp1, rp2);
       for (m of maps.regular) {
         if (!result.maps.some((item) => item.map.title == m.title)) {
-          result.maps.push({ map: m, route: `${rp1} to ${rp2}` });
+          result.maps.push({
+            map: m,
+            from: await convertGroupToMainStation(rp1),
+            to: await convertGroupToMainStation(rp2),
+          });
         }
       }
       for (m of maps.london.to) {
         if (!result.londonMaps.to.some((item) => item.map.title == m.title)) {
           result.londonMaps.to.push({
             map: m,
-            route: `${rp1} to ${rp2} via LONDON`,
+            from: await convertGroupToMainStation(rp1),
+            to: "EUS",
           });
         }
       }
@@ -75,7 +81,8 @@ async function getRouteWithAllDetails(from, to) {
         if (!result.londonMaps.from.some((item) => item.map.title == m.title)) {
           result.londonMaps.from.push({
             map: m,
-            route: `${rp1} to ${rp2} via LONDON`,
+            from: "EUS",
+            to: await convertGroupToMainStation(rp2),
           });
         }
       }

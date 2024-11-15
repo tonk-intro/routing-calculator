@@ -2,19 +2,12 @@ import { useRef } from "react";
 
 let counter = 0;
 
-export function StationPicker({
-  key,
-  caption,
-  stations,
-  children,
-  onSelected,
-  value,
-}) {
+export function StationPicker({ key, stations, children, onSelected, value }) {
+  const id = useRef(counter++);
+
   if (!stations) {
     return <p>Loading ...</p>;
   }
-
-  const id = useRef(counter++);
 
   function onChange(e) {
     // if (stations.some((st) => st.name == e.target.value)) {

@@ -185,7 +185,10 @@ async function routeToMaps(from, to, colourPicker) {
       }
     }
     if (mapCombination != "LO")
-      regular.push({ title: mapCombination, map: currentMap });
+      regular.push({
+        title: mapCombination.replace(",", "+"),
+        map: currentMap,
+      });
   }
 
   return { regular, london };

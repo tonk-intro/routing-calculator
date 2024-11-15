@@ -96,8 +96,8 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
   }
   console.table(coords);
 
-  const fromStation = stationCodeToLatLong(stationList, from.id);
-  const toStation = stationCodeToLatLong(stationList, to.id);
+  const fromStation = stationCodeToLatLong(stationList, from);
+  const toStation = stationCodeToLatLong(stationList, to);
 
   return (
     <div id="map">
@@ -118,8 +118,8 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {displayStations.map((item) => (
-          <Marker opacity={0} position={[item.lat, item.long]}>
+        {displayStations.map((item, index) => (
+          <Marker key={index} opacity={0} position={[item.lat, item.long]}>
             <Tooltip direction="right" offset={[0, 20]} opacity={1}>
               {item.name}
             </Tooltip>
@@ -136,8 +136,12 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
           </Tooltip>
         </Marker>
 
-        {paths.map((item) => (
-          <Polygon pathOptions={{ color: item.colour }} positions={item.path} />
+        {paths.map((item, index) => (
+          <Polygon
+            key={index}
+            pathOptions={{ color: item.colour }}
+            positions={item.path}
+          />
         ))}
       </MapContainer>
     </div>
