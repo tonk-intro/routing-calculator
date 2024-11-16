@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import RouteMap from "./components/RouteMap";
 import { StationPicker } from "./components/StationPicker";
 import "./style.css";
 import MapContainer from "./components/MapContainer";
+import ErrorView from "./components/ErrorView";
 
 const BACKEND_SERVER = "http://localhost:3000";
 
@@ -17,17 +17,33 @@ function App() {
   function getRoute(from, to) {
     setRoute(null);
     fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((res) => {
-        if (res.maps != null) {
-          setRoute(res);
-        }
+        console.log("SETTING ROUTE");
+        console.log(res);
+        setRoute(res);
+      })
+      .catch((err) => {
+        setRoute({
+          error: true,
+          errorMsg: `Failed to fetch route: ${err.message}.`,
+        });
       });
   }
   function getStations() {
     fetch(BACKEND_SERVER + `/stations`)
       .then((response) => response.json())
-      .then((res) => setStationList(res));
+      .then((res) => {
+        setStationList(res);
+      })
+      .catch((err) => {
+        setRoute({
+          error: true,
+          errorMsg: `Failed to fetch stations: ${err.message}.`,
+        });
+      });
   }
 
   useEffect(() => {
@@ -67,27 +83,34 @@ function App() {
         </div>
       </div>
 
-      <MapContainer stationList={stationList} maps={route && route.maps}>
-        <h2>
-          {route && route.fromStation.name} to {route && route.toStation.name}
-        </h2>
-      </MapContainer>
+      <ErrorView data={route} />
 
-      <div className="side-by-side">
-        <MapContainer
-          stationList={stationList}
-          maps={route && route.londonMaps.to}
-        >
-          <h2>{route && route.fromStation.name} to London</h2>
-        </MapContainer>
+      {route && !route.error && (
+        <div>
+          <MapContainer stationList={stationList} maps={route && route.maps}>
+            <h2>
+              {route && route.fromStation.name} to{" "}
+              {route && route.toStation.name}
+            </h2>
+          </MapContainer>
 
-        <MapContainer
-          stationList={stationList}
-          maps={route && route.londonMaps.from}
-        >
-          <h2>London to {route && route.toStation.name}</h2>
-        </MapContainer>
-      </div>
+          <div className="side-by-side">
+            <MapContainer
+              stationList={stationList}
+              maps={route && route.londonMaps.to}
+            >
+              <h2>{route && route.fromStation.name} to London</h2>
+            </MapContainer>
+
+            <MapContainer
+              stationList={stationList}
+              maps={route && route.londonMaps.from}
+            >
+              <h2>London to {route && route.toStation.name}</h2>
+            </MapContainer>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -7,6 +7,7 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
+const { serialize } = require("v8");
 
 app.use(cors());
 
@@ -15,10 +16,17 @@ app.get("/stations", async (req, res) => {
   res.json(stations);
 });
 
-app.get("/maps/:from/:to", async (req, res) => {
-  const result = await getRouteWithAllDetails(req.params.from, req.params.to);
+app.get("/maps/:from/:to", async (req, res, next) => {
+  try {
+    const result = await getRouteWithAllDetails(req.params.from, req.params.to);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
 
-  res.json(result);
+app.use((err, req, res, next) => {
+  res.json({ error: true, errorMsg: err.message });
 });
 
 setup().then((res) => {

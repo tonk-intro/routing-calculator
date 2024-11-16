@@ -21,8 +21,7 @@ async function getRouteWithAllDetails(from, to) {
   const result = { haveSharedRP: false, error: false };
 
   if (from == to) {
-    result.error = true;
-    return result;
+    throw new Error("Origin and destination are identical: " + from + ".");
   }
 
   const fromStation = await getStationByName(from);
