@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { StationPicker } from "./components/StationPicker";
 import "./style.css";
-import MapContainer from "./components/MapContainer";
+import RouteOverview from "./components/RouteOverview";
 import ErrorView from "./components/ErrorView";
 
 const BACKEND_SERVER = "http://localhost:3000";
@@ -84,33 +84,7 @@ function App() {
       </div>
 
       <ErrorView data={route} />
-
-      {route && !route.error && (
-        <div>
-          <MapContainer stationList={stationList} maps={route && route.maps}>
-            <h2>
-              {route && route.fromStation.name} to{" "}
-              {route && route.toStation.name}
-            </h2>
-          </MapContainer>
-
-          <div className="side-by-side">
-            <MapContainer
-              stationList={stationList}
-              maps={route && route.londonMaps.to}
-            >
-              <h2>{route && route.fromStation.name} to London</h2>
-            </MapContainer>
-
-            <MapContainer
-              stationList={stationList}
-              maps={route && route.londonMaps.from}
-            >
-              <h2>London to {route && route.toStation.name}</h2>
-            </MapContainer>
-          </div>
-        </div>
-      )}
+      <RouteOverview stationList={stationList} route={route} />
     </>
   );
 }

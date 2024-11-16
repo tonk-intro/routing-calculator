@@ -1,5 +1,5 @@
 export default function ErrorView({ data }) {
-  if (!data) return null;
+  if (!data) return <p>Loading ...</p>;
   if (!data.error) return null;
 
   return (
