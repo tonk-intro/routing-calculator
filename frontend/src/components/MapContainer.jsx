@@ -15,9 +15,9 @@ export default function MapContainer({ children, stationList, maps }) {
             {"Map " +
               count++ +
               ": " +
-              item.from +
+              item.fromRP +
               " to " +
-              item.to +
+              item.toRP +
               " with Map " +
               item.map.title}
           </h3>

@@ -54,26 +54,26 @@ function DistinctRoutingPoints(stationList, route) {
           </ul>
         </p>
       </div>
-      <MapContainer
-        stationList={stationList}
-        maps={route && route.maps}
-      ></MapContainer>
+      <MapContainer stationList={stationList} maps={route.maps}></MapContainer>
 
       <div className="side-by-side">
-        <MapContainer
-          stationList={stationList}
-          maps={route && route.londonMaps.to}
-        >
-          <h2>{route && route.fromStation.name} to London</h2>
+        <MapContainer stationList={stationList} maps={route.londonMaps.to}>
+          <h2>{route.fromStation.name} to London</h2>
         </MapContainer>
 
-        <MapContainer
-          stationList={stationList}
-          maps={route && route.londonMaps.from}
-        >
-          <h2>London to {route && route.toStation.name}</h2>
+        <MapContainer stationList={stationList} maps={route.londonMaps.from}>
+          <h2>London to {route.toStation.name}</h2>
         </MapContainer>
       </div>
     </>
   );
 }
+
+// function filterMap(map, term, stationList) {
+//   if (term == "") return map;
+
+//   const stationId = stationList.find((st) => st.name == term);
+//   if (!stationId) return map;
+
+//   return map.filter(m => )
+// }

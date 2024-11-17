@@ -75,6 +75,8 @@ async function getRouteWithAllDetails(from, to) {
             map: m,
             from: await convertGroupToMainStation(rp1),
             to: await convertGroupToMainStation(rp2),
+            fromRP: rp1,
+            toRP: rp2,
           });
         }
       }
@@ -84,6 +86,8 @@ async function getRouteWithAllDetails(from, to) {
             map: m,
             from: await convertGroupToMainStation(rp1),
             to: "EUS",
+            fromRP: rp1,
+            toRP: "G01",
           });
         }
       }
@@ -93,6 +97,8 @@ async function getRouteWithAllDetails(from, to) {
             map: m,
             from: "EUS",
             to: await convertGroupToMainStation(rp2),
+            fromRP: "G01",
+            toRP: rp2,
           });
         }
       }
