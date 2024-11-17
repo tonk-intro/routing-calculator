@@ -17,7 +17,7 @@ function SharedRoutingPoints(route) {
 
       <p>
         {route.fromStation.name} and {route.toStation.name} have the following
-        Routing Point in Common: {route.sharedRP}.
+        Routing Point in Common: {route.sharedRP.name} ({route.sharedRP.id}).
       </p>
     </div>
   );
@@ -26,11 +26,38 @@ function SharedRoutingPoints(route) {
 function DistinctRoutingPoints(stationList, route) {
   return (
     <>
-      <MapContainer stationList={stationList} maps={route && route.maps}>
+      <div>
         <h2>
-          {route && route.fromStation.name} to {route && route.toStation.name}
+          {route.fromStation.name} to {route.toStation.name}
         </h2>
-      </MapContainer>
+
+        <p>
+          {route.fromStation.name} is associated with the following routing
+          points:
+          <ul>
+            {route.routingPoints.from.map((item, index) => (
+              <li key={index}>
+                {item.name} ({item.id})
+              </li>
+            ))}
+          </ul>
+        </p>
+        <p>
+          {route.toStation.name} is associated with the following routing
+          points:
+          <ul>
+            {route.routingPoints.to.map((item, index) => (
+              <li key={index}>
+                {item.name} ({item.id})
+              </li>
+            ))}
+          </ul>
+        </p>
+      </div>
+      <MapContainer
+        stationList={stationList}
+        maps={route && route.maps}
+      ></MapContainer>
 
       <div className="side-by-side">
         <MapContainer

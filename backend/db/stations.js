@@ -25,7 +25,7 @@ async function getStationOrGroupNameById(id) {
   );
   if (rows.length == 0) throw new Error("No station group found for ID " + id);
 
-  return rows[0].name;
+  return { name: rows[0].name, id: id };
 }
 
 async function getStationByName(name) {

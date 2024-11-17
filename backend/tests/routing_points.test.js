@@ -25,7 +25,7 @@ describe("Common Routing Points", () => {
     const result = await getRouteWithAllDetails("Battle", "Headcorn");
 
     expect(result.haveSharedRP).toBeTruthy();
-    expect(result.sharedRP).toBe("TON");
+    expect(result.sharedRP.id).toBe("TON");
   });
 
   // Example (c) - Helsby to Capenhurst. Each station has two common routeing points, Chester (13
@@ -36,7 +36,7 @@ describe("Common Routing Points", () => {
     const result = await getRouteWithAllDetails("Helsby", "Capenhurst");
 
     expect(result.haveSharedRP).toBeTruthy();
-    expect(result.sharedRP).toBe("HOO");
+    expect(result.sharedRP.id).toBe("HOO");
   });
 });
 
@@ -55,16 +55,20 @@ describe("Distinct Routing Points", () => {
     const result = await getRouteWithAllDetails("Gunnislake", "Crewkerne");
 
     console.log(result);
-    expect(result.routingPoints.from.includes("G21")).toBeTruthy();
-    expect(result.routingPoints.to.includes("G12")).toBeTruthy();
+    expect(
+      result.routingPoints.from.map((rp) => rp.id).includes("G21")
+    ).toBeTruthy();
+    expect(
+      result.routingPoints.to.map((rp) => rp.id).includes("G12")
+    ).toBeTruthy();
     // expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
   });
 
   // Example 1: HERNE BAY TO GRAVESEND
   test("Herne Bay to Gravesend", async () => {
     const result = await getRouteWithAllDetails("Herne Bay", "Gravesend");
-    expect(result.routingPoints.from).toEqual(["FAV"]);
-    expect(result.routingPoints.to).toEqual(["GRV"]);
+    expect(result.routingPoints.from.map((rp) => rp.id)).toEqual(["FAV"]);
+    expect(result.routingPoints.to.map((rp) => rp.id)).toEqual(["GRV"]);
   });
 
   // Example 2: PAR TO PONTYPRIDD
@@ -74,7 +78,7 @@ describe("Distinct Routing Points", () => {
   test("Lostwithiel to Pontypridd", async () => {
     const result = await getRouteWithAllDetails("Lostwithiel", "Pontypridd");
 
-    expect(result.routingPoints.from).toEqual(["LSK"]);
-    expect(result.routingPoints.to).toEqual(["PPD"]);
+    expect(result.routingPoints.from.map((rp) => rp.id)).toEqual(["LSK"]);
+    expect(result.routingPoints.to.map((rp) => rp.id)).toEqual(["PPD"]);
   });
 });

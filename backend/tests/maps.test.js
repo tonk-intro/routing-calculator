@@ -18,7 +18,7 @@ describe("Map Selection", () => {
   test("Darlington to Shrewsbury", async () => {
     const result = await getRouteWithAllDetails("Darlington", "Shrewsbury");
     expect(
-      result.maps.some((item) => item.map.title == "YM,BY,CA")
+      result.maps.some((item) => item.map.title == "YM+BY+CA")
     ).toBeTruthy();
   });
 
@@ -32,13 +32,17 @@ describe("Map Selection", () => {
 
     const result = await getRouteWithAllDetails("Lydney", "Church Stretton");
 
-    expect(result.routingPoints.from).toEqual(["NWP", "GCR", "G05"]);
-    expect(result.routingPoints.to).toEqual(["CRV"]);
+    expect(result.routingPoints.from.map((rp) => rp.id)).toEqual([
+      "NWP",
+      "GCR",
+      "G05",
+    ]);
+    expect(result.routingPoints.to.map((rp) => rp.id)).toEqual(["CRV"]);
 
     expect(
       result.maps.reduce((prev, cur) => {
         return [...prev, cur.map.title];
       }, [])
-    ).toEqual(["MC", "PB,CA", "WT,MC", "MP"]);
+    ).toEqual(["MC", "PB+CA", "WT+MC", "MP"]);
   });
 });

@@ -1,7 +1,11 @@
 const { getNeighbours } = require("../db/distances");
 const { createRailwayGraph } = require("../logic/graph");
 const { shortestPath } = require("../logic/dijkstra");
-const { getAllStationIds, getStationByName } = require("../db/stations");
+const {
+  getAllStationIds,
+  getStationByName,
+  getStationOrGroupNameById,
+} = require("../db/stations");
 const { getCommonRoutingPoint } = require("../logic/routing_points");
 const { getValidRoutingPoints } = require("../logic/routing_points");
 const { getPermittedRoutes } = require("../logic/route_map");
@@ -38,7 +42,7 @@ async function getRouteWithAllDetails(from, to) {
 
   if (shared != null) {
     result.haveSharedRP = true;
-    result.sharedRP = shared;
+    result.sharedRP = await getStationOrGroupNameById(shared);
 
     return result;
   }
@@ -50,7 +54,14 @@ async function getRouteWithAllDetails(from, to) {
   const fromRPs = validRPs.from;
   const toRPs = validRPs.to;
 
-  result.routingPoints = { from: fromRPs, to: toRPs };
+  result.routingPoints = {
+    from: await Promise.all(
+      fromRPs.map(async (rp) => await getStationOrGroupNameById(rp))
+    ),
+    to: await Promise.all(
+      toRPs.map(async (rp) => await getStationOrGroupNameById(rp))
+    ),
+  };
 
   result.maps = [];
   result.londonMaps = { from: [], to: [] };
