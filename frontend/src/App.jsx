@@ -4,7 +4,7 @@ import "./style.css";
 import RouteOverview from "./components/RouteOverview";
 import ErrorView from "./components/ErrorView";
 
-const BACKEND_SERVER = "http://localhost:3000";
+const BACKEND_SERVER = import.meta.env.VITE_BACKEND;
 
 function App() {
   const [stationList, setStationList] = useState(null);

@@ -7,9 +7,13 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
-const { serialize } = require("v8");
+// const { serialize } = require("v8");
 
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+
+app.use(cors(corsOptions));
 
 app.get("/stations", async (req, res) => {
   const stations = await getAllStations();
