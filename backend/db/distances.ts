@@ -1,6 +1,6 @@
 const pool = require("./pool");
 
-async function getNeighbours(station) {
+async function getNeighbours(station: string) {
   const { rows } = await pool.query(
     "SELECT to_station, length FROM distances WHERE from_station=$1",
     [station]
@@ -9,7 +9,7 @@ async function getNeighbours(station) {
   return rows;
 }
 
-async function getDistance(from, to) {
+async function getDistance(from: string, to: string) {
   const { rows } = await pool.query(
     "SELECT length FROM distances WHERE from_station=$1 AND to_station=$2",
     [from, to]

@@ -1,7 +1,7 @@
 const pool = require("./pool");
 // const { convertGroupToStation } = require("./routing");
 
-async function getFare(from, to) {
+async function getFare(from: string, to: string) {
   // // We don't have fares for CRS group codes like G12. So convert those first
   // const fromCrs = await convertGroupToStation(from);
   // const toCrs = await convertGroupToStation(to);
@@ -22,7 +22,7 @@ async function getFare(from, to) {
   return { fare: rows[0].fare, type: rows[0].type };
 }
 
-async function convertCrsToNlc(crs) {
+async function convertCrsToNlc(crs: string) {
   const { rows } = await pool.query(
     "SELECT nlc_code FROM codemap WHERE crs_code=$1",
     [crs]

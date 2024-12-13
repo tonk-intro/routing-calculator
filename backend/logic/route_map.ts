@@ -1,5 +1,6 @@
 const { routeToMapList, getMap, fuseMaps } = require("../db/maps");
 const { convertGroupToMainStation } = require("../db/routing");
+import type { Map } from "../db/maps";
 
 function getColourPicker() {
   const colours = ["red", "blue", "green", "black", "purple", "orange"];
@@ -9,21 +10,27 @@ function getColourPicker() {
   };
 }
 
-async function getPermittedRoutes(from, to) {
+interface MapContainer {
+  map: Map;
+  title: string;
+  from: string;
+  to: string;
+}
+interface PermittedRoutes {
+  regular: MapContainer[];
+  london: { from: MapContainer[]; to: MapContainer[] };
+}
+
+async function getPermittedRoutes(
+  from: string,
+  to: string
+): Promise<PermittedRoutes> {
   const cp = getColourPicker();
   const allMaps = await routeToMaps(from, to, cp);
 
   // Now we can forget about the station ids
   from = await convertGroupToMainStation(from);
   to = await convertGroupToMainStation(to);
-
-  //   const outgoing = getOutgoingPaths(allMaps[0].map, "CBG");
-
-  //   console.log(outgoing);
-
-  //   const paths = filterOutIrrelevantRoutes(allMaps[0].map, "CBG", "NRW");
-
-  //   const result = allMaps.map((map) => filterOutIrrelevantRoutes(map, from, to));
 
   allMaps.regular = allMaps.regular.map((m) => {
     return {
@@ -64,42 +71,27 @@ async function getPermittedRoutes(from, to) {
   );
 
   return allMaps;
-
-  //  Fuse the maps together.
-
-  //   let combinedMap = null;
-  //   for (m of allMaps) {
-  //     if (!combinedMap) combinedMap = m;
-  //     else combinedMap = fuseMaps(combinedMap, m);
-  //   }
-
-  //   return [{ title: `Routes from ${from} to ${to}`, map: combinedMap }];
 }
 
-function filterOutIrrelevantRoutes(map, from, to) {
-  const routes = [];
+function filterOutIrrelevantRoutes(map: Map, from: string, to: string) {
+  const routes: string[][] = [];
 
-  // console.log(`Map has ${Object.keys(map).length} nodes.`);
   findRoutes(map, from, to, [], routes);
-
-  // console.log("Got the routes: " + routes);
-
-  //   console.table(routes);
 
   const usedStations = routes.reduce((prev, cur) => {
     const result = [];
-    for (item of cur) {
+    for (const item of cur) {
       if (!prev.includes(item)) prev.push(item);
     }
     return prev;
   }, []);
 
-  const filteredMap = {};
+  const filteredMap: Map = {};
 
-  for (node in map) {
+  for (const node in map) {
     if (usedStations.includes(node)) {
       filteredMap[node] = { name: node, neighbours: [] };
-      for (nb of map[node].neighbours) {
+      for (const nb of map[node].neighbours) {
         if (usedStations.includes(nb.station)) {
           filteredMap[node].neighbours.push({
             station: nb.station,
@@ -114,11 +106,11 @@ function filterOutIrrelevantRoutes(map, from, to) {
 }
 
 function findRoutes(
-  map,
-  current,
-  dest,
-  path,
-  allPaths,
+  map: Map,
+  current: string,
+  dest: string,
+  path: string[],
+  allPaths: string[][],
   counter = { count: 1 }
 ) {
   if (counter.count > 20000) {
@@ -132,7 +124,7 @@ function findRoutes(
   if (current == dest) {
     allPaths.push([...path]);
   } else {
-    for (nb of map[current].neighbours) {
+    for (const nb of map[current].neighbours) {
       //   console.log(`Calling findRoutes for ${nb.station} from ${current}`);
       if (!path.includes(nb.station))
         findRoutes(map, nb.station, dest, path, allPaths, counter);
@@ -141,9 +133,18 @@ function findRoutes(
   path.pop();
 }
 
-async function routeToMaps(from, to, colourPicker) {
-  const regular = [];
-  const london = { from: [], to: [] }; // London maps = combination of to London / from London
+type ColourPickerFunction = () => string;
+
+async function routeToMaps(
+  from: string,
+  to: string,
+  colourPicker: ColourPickerFunction
+): Promise<PermittedRoutes> {
+  const regular: MapContainer[] = [];
+  const london: { from: MapContainer[]; to: MapContainer[] } = {
+    from: [],
+    to: [],
+  }; // London maps = combination of to London / from London
 
   const mapList = await routeToMapList(from, to);
 
@@ -152,7 +153,7 @@ async function routeToMaps(from, to, colourPicker) {
 
     let currentMap = null;
 
-    for (m of maps) {
+    for (const m of maps) {
       if (m == "LO") {
         // LONDON means we need to combine from => G01 => to
         // console.log(`Need to deal with LO map`);
@@ -188,6 +189,8 @@ async function routeToMaps(from, to, colourPicker) {
       regular.push({
         title: mapCombination.replaceAll(",", "+"),
         map: currentMap,
+        from,
+        to,
       });
   }
 

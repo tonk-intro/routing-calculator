@@ -2,8 +2,12 @@ const pool = require("./pool");
 
 const { convertGroupToMainStation } = require("./routing");
 
-async function routeToMapList(from, to) {
-  const { rows } = await pool.query(
+interface RoutesRow {
+  map_id: string;
+}
+
+async function routeToMapList(from: string, to: string) {
+  const { rows }: { rows: RoutesRow[] } = await pool.query(
     "SELECT map_id FROM routes WHERE from_station=$1 AND to_station=$2",
     [from, to]
   );
@@ -11,7 +15,12 @@ async function routeToMapList(from, to) {
   return rows.map((item) => item.map_id);
 }
 
-async function getMap(mapId, colour = "red") {
+interface MapsRow {
+  from_station: string;
+  to_station: string;
+}
+
+async function getMap(mapId: string, colour = "red") {
   const { rows } = await pool.query(
     "SELECT from_station, to_station FROM maps WHERE map_id=$1",
     [mapId]
@@ -20,7 +29,7 @@ async function getMap(mapId, colour = "red") {
   // We do the re-labelling here -- ideally should be done elsewhere though
   // Turn GXX station groups into representative stations
 
-  for (r of rows) {
+  for (const r of rows) {
     r.from_station = await convertGroupToMainStation(r.from_station);
     r.to_station = await convertGroupToMainStation(r.to_station);
   }
@@ -30,10 +39,22 @@ async function getMap(mapId, colour = "red") {
   return map;
 }
 
-function createMap(rows, colour) {
-  const map = {};
+interface Station {
+  station: string;
+  colour: string;
+}
+export interface Map {
+  [key: string]: MapEntry;
+}
+interface MapEntry {
+  name: string;
+  neighbours: Station[];
+}
 
-  for (item of rows) {
+function createMap(rows: MapsRow[], colour: string) {
+  const map: Map = {};
+
+  for (const item of rows) {
     if (!map[item.from_station]) {
       map[item.from_station] = {
         name: item.from_station,
@@ -50,10 +71,10 @@ function createMap(rows, colour) {
   return map;
 }
 
-function fuseMaps(first, second) {
+function fuseMaps(first: Map, second: Map) {
   const result = structuredClone(first);
 
-  for (item in second) {
+  for (const item in second) {
     if (!first[item]) {
       // this is a station no on the first map
       result[item] = structuredClone(second[item]);

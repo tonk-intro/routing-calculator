@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "include": ["**/*"],
+    "exclude": ["node_modules", "dist", "setup", "tests"],
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "dist"
+      }
+  }
+

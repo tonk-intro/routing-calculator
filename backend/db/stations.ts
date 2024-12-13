@@ -1,6 +1,6 @@
 const pool = require("./pool");
 
-async function getStationById(id) {
+async function getStationById(id: string) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE id=$1;", [
     id,
   ]);
@@ -12,7 +12,7 @@ async function getStationById(id) {
   return rows[0];
 }
 
-async function getStationOrGroupNameById(id) {
+async function getStationOrGroupNameById(id: string) {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(id)) {
@@ -28,7 +28,7 @@ async function getStationOrGroupNameById(id) {
   return { name: rows[0].name, id: id };
 }
 
-async function getStationByName(name) {
+async function getStationByName(name: string) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE name=$1;", [
     name,
   ]);
@@ -39,8 +39,14 @@ async function getStationByName(name) {
   return rows[0];
 }
 
+interface StationsRow {
+  id: string;
+}
+
 async function getAllStationIds() {
-  const { rows } = await pool.query("SELECT id FROM stations;");
+  const { rows }: { rows: StationsRow[] } = await pool.query(
+    "SELECT id FROM stations;"
+  );
 
   return rows.map((item) => item.id);
 }

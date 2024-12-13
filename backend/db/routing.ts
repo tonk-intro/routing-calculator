@@ -1,12 +1,17 @@
 const pool = require("./pool");
 const { getStationById } = require("./stations");
 
-async function getRoutingPoints(stationId) {
+interface RoutingPointsRow {
+  routing_point: string;
+  station: string;
+}
+
+async function getRoutingPoints(stationId: string) {
   const station = await getStationById(stationId);
 
   if (station.routing_point) return [station.id];
 
-  const { rows } = await pool.query(
+  const { rows }: { rows: RoutingPointsRow[] } = await pool.query(
     "SELECT routing_point FROM routing_points WHERE station=$1",
     [stationId]
   );
@@ -30,7 +35,7 @@ async function getRoutingPoints(stationId) {
   return rows.map((rp) => rp.routing_point);
 }
 
-async function convertStationToGroup(stationId) {
+async function convertStationToGroup(stationId: string) {
   const { rows } = await pool.query(
     "SELECT routing_group FROM routing_groups WHERE station=$1",
     [stationId]
@@ -41,12 +46,12 @@ async function convertStationToGroup(stationId) {
   return rows[0].routing_group;
 }
 
-async function convertGroupToStations(groupId) {
+async function convertGroupToStations(groupId: string) {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(groupId)) return [groupId];
 
-  const { rows } = await pool.query(
+  const { rows }: { rows: RoutingPointsRow[] } = await pool.query(
     "SELECT station FROM routing_groups WHERE routing_group=$1",
     [groupId]
   );
@@ -54,7 +59,7 @@ async function convertGroupToStations(groupId) {
   return rows.map((item) => item.station);
 }
 
-async function convertGroupToMainStation(groupId) {
+async function convertGroupToMainStation(groupId: string) {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(groupId)) return groupId;

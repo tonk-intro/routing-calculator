@@ -1,10 +1,23 @@
-async function shortestPath(graph, from, to) {
-  const visited = [];
-  const todo = [];
+import type { Graph, NeighbouringStation } from "./graph";
 
-  const distances = { [from]: { distance: 0 } }; // name: distance, successor
+interface DistanceList {
+  [key: string]: Distance;
+}
 
-  let prev = graph[from];
+interface Distance {
+  distance: number;
+  predecessor: string;
+}
+
+async function shortestPath(graph: Graph, from: string, to: string) {
+  const visited: NeighbouringStation[] = [];
+  const todo: NeighbouringStation[] = [];
+
+  const distances: DistanceList = {
+    [from]: { distance: 0, predecessor: "" },
+  }; // name: distance, successor
+
+  let prev: NeighbouringStation = graph[from] as NeighbouringStation;
   let done = false;
 
   while (!done) {
