@@ -2,7 +2,7 @@ import { getNeighbours } from "../db/distances.js";
 import { createRailwayGraph } from "../logic/graph.js";
 import type { ShortestPathFunc } from "../logic/routing_points.js";
 
-import type { PermittedRouteMaps } from "../logic/route_map.ts";
+import type { PermittedRouteMaps, MapContainer } from "../logic/route_map.ts";
 
 import { shortestPath } from "../logic/dijkstra.js";
 import {
@@ -19,24 +19,29 @@ import { convertGroupToMainStation } from "../db/routing.js";
 
 let shortestPathFunc: ShortestPathFunc;
 
-async function setup() {
+export async function setup() {
   const allTheStations = await getAllStationIds();
   const stationsGraph = await createRailwayGraph(allTheStations, getNeighbours);
   shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
 }
 
 interface PermittedRouteOverview {
-  haveSharedRP: boolean;
-  error: boolean;
-  fromStation: string;
-  toStation: string;
-  sharedRP: string;
-  routingPoints: { from: string[]; to: string[] };
-  maps: PermittedRouteMaps;
+  error?: boolean;
+  fromStation?: string;
+  toStation?: string;
+  haveSharedRP?: boolean;
+  sharedRP?: string;
+  routingPoints?: { from: string[]; to: string[] };
+  maps?: PermittedRouteMaps<MapContainerRouting>;
+}
+
+interface MapContainerRouting extends MapContainer {
+  toRP: string;
+  fromRP: string;
 }
 
 // Input names of target and destination station
-async function getRouteWithAllDetails(
+export async function getRouteWithAllDetails(
   from: string,
   to: string
 ): Promise<PermittedRouteOverview> {
@@ -83,16 +88,16 @@ async function getRouteWithAllDetails(
     ),
   };
 
-  result.maps = [];
-  result.londonMaps = { from: [], to: [] };
+  result.maps = { regular: [], london: { from: [], to: [] } };
 
   for (const rp1 of fromRPs) {
     for (const rp2 of toRPs) {
       const maps = await getPermittedRoutes(rp1, rp2);
       for (const m of maps.regular) {
-        if (!result.maps.some((item) => item.map.title == m.title)) {
-          result.maps.push({
-            map: m,
+        if (!result.maps.regular.some((item) => item.title == m.title)) {
+          result.maps.regular.push({
+            title: m.title,
+            map: m.map,
             from: await convertGroupToMainStation(rp1),
             to: await convertGroupToMainStation(rp2),
             fromRP: rp1,
@@ -101,9 +106,10 @@ async function getRouteWithAllDetails(
         }
       }
       for (const m of maps.london.to) {
-        if (!result.londonMaps.to.some((item) => item.map.title == m.title)) {
-          result.londonMaps.to.push({
-            map: m,
+        if (!result.maps.london.to.some((item) => item.title == m.title)) {
+          result.maps.london.to.push({
+            title: m.title,
+            map: m.map,
             from: await convertGroupToMainStation(rp1),
             to: "EUS",
             fromRP: rp1,
@@ -112,9 +118,10 @@ async function getRouteWithAllDetails(
         }
       }
       for (const m of maps.london.from) {
-        if (!result.londonMaps.from.some((item) => item.map.title == m.title)) {
-          result.londonMaps.from.push({
-            map: m,
+        if (!result.maps.london.from.some((item) => item.title == m.title)) {
+          result.maps.london.from.push({
+            title: m.title,
+            map: m.map,
             from: "EUS",
             to: await convertGroupToMainStation(rp2),
             fromRP: "G01",
@@ -127,5 +134,3 @@ async function getRouteWithAllDetails(
 
   return result;
 }
-
-module.exports = { getRouteWithAllDetails, setup };

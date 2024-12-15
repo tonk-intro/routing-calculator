@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "map_test.js",
   "scripts": {
-    "start": "node --watch express/app.js",
+    "start": "tsc --watch & node --watch dist/express/app.js",
+    "startprev": "node --watch express/app.js",
     "test": "jest --watch"
   },
   "keywords": [],
@@ -23,6 +24,8 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "@types/pg": "^8.11.10"
   }

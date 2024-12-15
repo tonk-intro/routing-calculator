@@ -19,12 +19,12 @@ export default function MapContainer({ children, stationList, maps }) {
               " to " +
               item.toRP +
               " with Map " +
-              item.map.title}
+              item.title}
           </h3>
 
           <RouteMap
             stationList={stationList}
-            data={item.map.map}
+            data={item.map}
             from={item.from}
             to={item.to}
           ></RouteMap>

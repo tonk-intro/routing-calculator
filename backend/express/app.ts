@@ -1,12 +1,14 @@
-require("dotenv").config({ path: ".env" });
+import "dotenv/config.js";
 
-const { getAllStations } = require("../api/stations");
-const { getRouteWithAllDetails, setup } = require("../api/routes");
+import getAllStations from "../api/stations.js";
+import { getRouteWithAllDetails, setup } from "../api/routes.js";
 
-const express = require("express");
+console.log(process.env.DB_HOST);
+
+import express from "express";
 const app = express();
 
-const cors = require("cors");
+import cors from "cors";
 // const { serialize } = require("v8");
 
 const corsOptions = {
@@ -29,7 +31,7 @@ app.get("/maps/:from/:to", async (req, res, next) => {
   }
 });
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: any, res: any, next: any) => {
   res.json({ error: true, errorMsg: err.message });
 });
 

@@ -1,6 +1,6 @@
-import { Pool } from "pg";
+import pg from "pg";
 
-export default new Pool({
+export default new pg.Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: process.env.DB__NAME,

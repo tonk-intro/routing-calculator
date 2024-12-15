@@ -11,21 +11,21 @@ function getColourPicker() {
   };
 }
 
-interface MapContainer {
+export interface MapContainer {
   map: Map;
   title: string;
   from: string;
   to: string;
 }
-export interface PermittedRouteMaps {
-  regular: MapContainer[];
-  london: { from: MapContainer[]; to: MapContainer[] };
+export interface PermittedRouteMaps<T extends MapContainer> {
+  regular: T[];
+  london: { from: T[]; to: T[] };
 }
 
 export async function getPermittedRoutes(
   from: string,
   to: string
-): Promise<PermittedRouteMaps> {
+): Promise<PermittedRouteMaps<MapContainer>> {
   const cp = getColourPicker();
   const allMaps = await routeToMaps(from, to, cp);
 
@@ -142,7 +142,7 @@ export async function routeToMaps(
   from: string,
   to: string,
   colourPicker: ColourPickerFunction
-): Promise<PermittedRouteMaps> {
+): Promise<PermittedRouteMaps<MapContainer>> {
   const regular: MapContainer[] = [];
   const london: { from: MapContainer[]; to: MapContainer[] } = {
     from: [],

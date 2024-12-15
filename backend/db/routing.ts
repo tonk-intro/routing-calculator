@@ -1,5 +1,5 @@
-const pool = require("./pool.js");
-const { getStationById } = require("./stations.js");
+import pool from "./pool.js";
+import { getStationById } from "./stations.js";
 
 interface RoutingPointsRow {
   routing_point: string;

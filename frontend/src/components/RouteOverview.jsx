@@ -54,14 +54,17 @@ function DistinctRoutingPoints(stationList, route) {
           </ul>
         </p>
       </div>
-      <MapContainer stationList={stationList} maps={route.maps}></MapContainer>
+      <MapContainer
+        stationList={stationList}
+        maps={route.maps.regular}
+      ></MapContainer>
 
       <div className="side-by-side">
-        <MapContainer stationList={stationList} maps={route.londonMaps.to}>
+        <MapContainer stationList={stationList} maps={route.maps.london.to}>
           <h2>{route.fromStation.name} to London</h2>
         </MapContainer>
 
-        <MapContainer stationList={stationList} maps={route.londonMaps.from}>
+        <MapContainer stationList={stationList} maps={route.maps.london.from}>
           <h2>London to {route.toStation.name}</h2>
         </MapContainer>
       </div>
