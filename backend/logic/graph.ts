@@ -18,7 +18,7 @@ export interface NeighbouringStation extends Station {
   distance: number;
 }
 
-async function createRailwayGraph(
+export async function createRailwayGraph(
   stationList: string[],
   neighbourhoodFunction: NeighbourhoodFunction
 ) {
@@ -40,5 +40,3 @@ async function createRailwayGraph(
 
   return graph;
 }
-
-module.exports = { createRailwayGraph };

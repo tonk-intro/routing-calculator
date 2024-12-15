@@ -1,6 +1,6 @@
-const pool = require("./pool");
+import pool from "./pool.js";
 
-async function getNeighbours(station: string) {
+export async function getNeighbours(station: string) {
   const { rows } = await pool.query(
     "SELECT to_station, length FROM distances WHERE from_station=$1",
     [station]
@@ -9,7 +9,7 @@ async function getNeighbours(station: string) {
   return rows;
 }
 
-async function getDistance(from: string, to: string) {
+export async function getDistance(from: string, to: string) {
   const { rows } = await pool.query(
     "SELECT length FROM distances WHERE from_station=$1 AND to_station=$2",
     [from, to]
@@ -17,4 +17,3 @@ async function getDistance(from: string, to: string) {
 
   return rows[0].length;
 }
-module.exports = { getNeighbours, getDistance };

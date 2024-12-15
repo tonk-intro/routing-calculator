@@ -1,11 +1,19 @@
-const { getRoutingPoints } = require("../db/routing");
-const { getFare } = require("./../db/fares");
-const {
+import { getRoutingPoints } from "../db/routing.js";
+import { getFare } from "./../db/fares.js";
+import {
   convertStationToGroup,
   convertGroupToStations,
-} = require("../db/routing");
+} from "../db/routing.js";
 
-async function getCommonRoutingPoint(from, to, shortestPath) {
+import type { Path } from "./dijkstra.js";
+
+type ShortestPathFunc = (from: string, to: string) => Path;
+
+async function getCommonRoutingPoint(
+  from: string,
+  to: string,
+  shortestPath: ShortestPathFunc
+) {
   const rpFrom = await getRoutingPoints(from);
   const rpTo = await getRoutingPoints(to);
 
@@ -40,7 +48,7 @@ async function getValidRoutingPoints(from, to) {
   } else {
     rpTo = await expandStationGroups(rpTo);
 
-    for (rp of rpTo) {
+    for (const rp of rpTo) {
       try {
         fare1 = await getFare(from, rp);
         fare2 = await getFare(from, to);
@@ -67,7 +75,7 @@ async function getValidRoutingPoints(from, to) {
   } else {
     rpFrom = await expandStationGroups(rpFrom);
 
-    for (rp of rpFrom) {
+    for (const rp of rpFrom) {
       try {
         fare1 = await getFare(rp, to);
         fare2 = await getFare(from, to);
@@ -97,9 +105,9 @@ async function getValidRoutingPoints(from, to) {
 
 // takes an array of routing points and returns array where routing groups (e.g. G01)
 // are replaced by all the group members
-async function expandStationGroups(routingPoints) {
-  const result = [];
-  for (rp of routingPoints) {
+async function expandStationGroups(routingPoints: string[]) {
+  const result: string[] = [];
+  for (const rp of routingPoints) {
     const transformed = await convertGroupToStations(rp);
     transformed.forEach((item) => result.push(item));
   }
@@ -108,10 +116,10 @@ async function expandStationGroups(routingPoints) {
 }
 
 // Takes array of touring points and collapses the stations that have routing groups into them
-async function contractStationGroups(routingPoints) {
-  const result = [];
+async function contractStationGroups(routingPoints: string[]) {
+  const result: string[] = [];
 
-  for (rp of routingPoints) {
+  for (const rp of routingPoints) {
     const conv = await convertStationToGroup(rp);
     if (!result.includes(conv)) {
       result.push(conv);

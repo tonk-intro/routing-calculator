@@ -4,7 +4,8 @@
     "exclude": ["node_modules", "dist", "setup", "tests"],
     "compilerOptions": {
         "allowJs": true,
-        "outDir": "dist"
+        "outDir": "dist",
+        "strict": true
       }
   }
 

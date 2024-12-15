@@ -1,6 +1,7 @@
-const { routeToMapList, getMap, fuseMaps } = require("../db/maps");
-const { convertGroupToMainStation } = require("../db/routing");
-import type { Map } from "../db/maps";
+import { routeToMapList, getMap, fuseMaps } from "../db/maps.js";
+import { convertGroupToMainStation } from "../db/routing.js";
+
+import type { Map } from "../db/maps.js";
 
 function getColourPicker() {
   const colours = ["red", "blue", "green", "black", "purple", "orange"];
@@ -21,7 +22,7 @@ interface PermittedRoutes {
   london: { from: MapContainer[]; to: MapContainer[] };
 }
 
-async function getPermittedRoutes(
+export async function getPermittedRoutes(
   from: string,
   to: string
 ): Promise<PermittedRoutes> {
@@ -36,6 +37,8 @@ async function getPermittedRoutes(
     return {
       title: m.title,
       map: filterOutIrrelevantRoutes(m.map, from, to),
+      from,
+      to,
     };
   });
 
@@ -135,7 +138,7 @@ function findRoutes(
 
 type ColourPickerFunction = () => string;
 
-async function routeToMaps(
+export async function routeToMaps(
   from: string,
   to: string,
   colourPicker: ColourPickerFunction
@@ -196,5 +199,3 @@ async function routeToMaps(
 
   return { regular, london };
 }
-
-module.exports = { routeToMaps, getPermittedRoutes };

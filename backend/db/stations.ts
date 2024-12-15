@@ -1,6 +1,6 @@
-const pool = require("./pool");
+import pool from "./pool.js";
 
-async function getStationById(id: string) {
+export async function getStationById(id: string) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE id=$1;", [
     id,
   ]);
@@ -12,7 +12,7 @@ async function getStationById(id: string) {
   return rows[0];
 }
 
-async function getStationOrGroupNameById(id: string) {
+export async function getStationOrGroupNameById(id: string) {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(id)) {
@@ -28,7 +28,7 @@ async function getStationOrGroupNameById(id: string) {
   return { name: rows[0].name, id: id };
 }
 
-async function getStationByName(name: string) {
+export async function getStationByName(name: string) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE name=$1;", [
     name,
   ]);
@@ -43,7 +43,7 @@ interface StationsRow {
   id: string;
 }
 
-async function getAllStationIds() {
+export async function getAllStationIds() {
   const { rows }: { rows: StationsRow[] } = await pool.query(
     "SELECT id FROM stations;"
   );
@@ -51,18 +51,10 @@ async function getAllStationIds() {
   return rows.map((item) => item.id);
 }
 
-async function getAllStations() {
+export async function getAllStations() {
   const { rows } = await pool.query(
     "SELECT id, name, lat, long FROM stations JOIN locations ON stations.id = locations.station_id;"
   );
 
   return rows;
 }
-
-module.exports = {
-  getStationById,
-  getStationByName,
-  getAllStationIds,
-  getStationOrGroupNameById,
-  getAllStations,
-};

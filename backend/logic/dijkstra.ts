@@ -1,4 +1,4 @@
-import type { Graph, NeighbouringStation } from "./graph";
+import type { Graph, NeighbouringStation } from "./graph.js";
 
 interface DistanceList {
   [key: string]: Distance;
@@ -9,7 +9,16 @@ interface Distance {
   predecessor: string;
 }
 
-async function shortestPath(graph: Graph, from: string, to: string) {
+export interface Path {
+  distance: number;
+  path: string[];
+}
+
+export async function shortestPath(
+  graph: Graph,
+  from: string,
+  to: string
+): Promise<Path> {
   const visited: NeighbouringStation[] = [];
   const todo: NeighbouringStation[] = [];
 
@@ -67,5 +76,3 @@ async function shortestPath(graph: Graph, from: string, to: string) {
 
   return { distance: distances[to].distance, path: [...path, from].reverse() };
 }
-
-module.exports = { shortestPath };

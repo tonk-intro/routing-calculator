@@ -1,7 +1,6 @@
-const pool = require("./pool");
-// const { convertGroupToStation } = require("./routing");
+import pool from "./pool.js";
 
-async function getFare(from: string, to: string) {
+export async function getFare(from: string, to: string) {
   // // We don't have fares for CRS group codes like G12. So convert those first
   // const fromCrs = await convertGroupToStation(from);
   // const toCrs = await convertGroupToStation(to);
@@ -34,5 +33,3 @@ async function convertCrsToNlc(crs: string) {
 
   return rows[0].nlc_code;
 }
-
-module.exports = { getFare };

@@ -1,12 +1,12 @@
-const pool = require("./pool");
+import pool from "./pool.js";
 
-const { convertGroupToMainStation } = require("./routing");
+import { convertGroupToMainStation } from "./routing.js";
 
 interface RoutesRow {
   map_id: string;
 }
 
-async function routeToMapList(from: string, to: string) {
+export async function routeToMapList(from: string, to: string) {
   const { rows }: { rows: RoutesRow[] } = await pool.query(
     "SELECT map_id FROM routes WHERE from_station=$1 AND to_station=$2",
     [from, to]
@@ -20,7 +20,7 @@ interface MapsRow {
   to_station: string;
 }
 
-async function getMap(mapId: string, colour = "red") {
+export async function getMap(mapId: string, colour = "red") {
   const { rows } = await pool.query(
     "SELECT from_station, to_station FROM maps WHERE map_id=$1",
     [mapId]
@@ -71,7 +71,7 @@ function createMap(rows: MapsRow[], colour: string) {
   return map;
 }
 
-function fuseMaps(first: Map, second: Map) {
+export function fuseMaps(first: Map, second: Map) {
   const result = structuredClone(first);
 
   for (const item in second) {
@@ -89,5 +89,3 @@ function fuseMaps(first: Map, second: Map) {
 
   return result;
 }
-
-module.exports = { getMap, fuseMaps, routeToMapList };
