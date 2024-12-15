@@ -1,6 +1,11 @@
 import pool from "./pool.js";
 
-export async function getNeighbours(station: string) {
+export interface Neighbour {
+  length: string;
+  to_station: string;
+}
+
+export async function getNeighbours(station: string): Promise<Neighbour[]> {
   const { rows } = await pool.query(
     "SELECT to_station, length FROM distances WHERE from_station=$1",
     [station]

@@ -1,28 +1,48 @@
-const { getNeighbours } = require("../db/distances");
-const { createRailwayGraph } = require("../logic/graph");
-const { shortestPath } = require("../logic/dijkstra");
-const {
+import { getNeighbours } from "../db/distances.js";
+import { createRailwayGraph } from "../logic/graph.js";
+import type { ShortestPathFunc } from "../logic/routing_points.js";
+
+import type { PermittedRouteMaps } from "../logic/route_map.ts";
+
+import { shortestPath } from "../logic/dijkstra.js";
+import {
   getAllStationIds,
   getStationByName,
   getStationOrGroupNameById,
-} = require("../db/stations");
-const { getCommonRoutingPoint } = require("../logic/routing_points");
-const { getValidRoutingPoints } = require("../logic/routing_points");
-const { getPermittedRoutes } = require("../logic/route_map");
-const { convertGroupToMainStation } = require("../db/routing");
+} from "../db/stations.js";
+import {
+  getCommonRoutingPoint,
+  getValidRoutingPoints,
+} from "../logic/routing_points.js";
+import { getPermittedRoutes } from "../logic/route_map.js";
+import { convertGroupToMainStation } from "../db/routing.js";
 
-let shortestPathFunc = null;
+let shortestPathFunc: ShortestPathFunc;
 
 async function setup() {
   const allTheStations = await getAllStationIds();
   const stationsGraph = await createRailwayGraph(allTheStations, getNeighbours);
   shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
 }
+
+interface PermittedRouteOverview {
+  haveSharedRP: boolean;
+  error: boolean;
+  fromStation: string;
+  toStation: string;
+  sharedRP: string;
+  routingPoints: { from: string[]; to: string[] };
+  maps: PermittedRouteMaps;
+}
+
 // Input names of target and destination station
-async function getRouteWithAllDetails(from, to) {
+async function getRouteWithAllDetails(
+  from: string,
+  to: string
+): Promise<PermittedRouteOverview> {
   if (!shortestPathFunc) throw new Error("call setup first!");
 
-  const result = { haveSharedRP: false, error: false };
+  const result: PermittedRouteOverview = { haveSharedRP: false, error: false };
 
   if (from == to) {
     throw new Error("Origin and destination are identical: " + from + ".");
@@ -66,10 +86,10 @@ async function getRouteWithAllDetails(from, to) {
   result.maps = [];
   result.londonMaps = { from: [], to: [] };
 
-  for (rp1 of fromRPs) {
-    for (rp2 of toRPs) {
+  for (const rp1 of fromRPs) {
+    for (const rp2 of toRPs) {
       const maps = await getPermittedRoutes(rp1, rp2);
-      for (m of maps.regular) {
+      for (const m of maps.regular) {
         if (!result.maps.some((item) => item.map.title == m.title)) {
           result.maps.push({
             map: m,
@@ -80,7 +100,7 @@ async function getRouteWithAllDetails(from, to) {
           });
         }
       }
-      for (m of maps.london.to) {
+      for (const m of maps.london.to) {
         if (!result.londonMaps.to.some((item) => item.map.title == m.title)) {
           result.londonMaps.to.push({
             map: m,
@@ -91,7 +111,7 @@ async function getRouteWithAllDetails(from, to) {
           });
         }
       }
-      for (m of maps.london.from) {
+      for (const m of maps.london.from) {
         if (!result.londonMaps.from.some((item) => item.map.title == m.title)) {
           result.londonMaps.from.push({
             map: m,

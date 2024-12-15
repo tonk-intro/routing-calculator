@@ -7,9 +7,9 @@ import {
 
 import type { Path } from "./dijkstra.js";
 
-type ShortestPathFunc = (from: string, to: string) => Path;
+export type ShortestPathFunc = (from: string, to: string) => Promise<Path>;
 
-async function getCommonRoutingPoint(
+export async function getCommonRoutingPoint(
   from: string,
   to: string,
   shortestPath: ShortestPathFunc
@@ -32,7 +32,7 @@ async function getCommonRoutingPoint(
   }
 }
 
-async function getValidRoutingPoints(from, to) {
+export async function getValidRoutingPoints(from: string, to: string) {
   // We might need to exclude some routing points based on the fares in 1996
 
   let rpFrom = await getRoutingPoints(from);
@@ -128,5 +128,3 @@ async function contractStationGroups(routingPoints: string[]) {
 
   return result;
 }
-
-module.exports = { getCommonRoutingPoint, getValidRoutingPoints };

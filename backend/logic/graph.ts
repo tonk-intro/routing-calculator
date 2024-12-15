@@ -1,4 +1,5 @@
-type NeighbourhoodFunction = (station: string) => Neighbour[];
+import type { Neighbour } from "../db/distances.ts";
+type NeighbourhoodFunction = (station: string) => Promise<Neighbour[]>;
 
 export interface Station {
   name: string;
@@ -7,11 +8,6 @@ export interface Station {
 
 export interface Graph {
   [key: string]: Station;
-}
-
-interface Neighbour {
-  length: string;
-  to_station: string;
 }
 
 export interface NeighbouringStation extends Station {

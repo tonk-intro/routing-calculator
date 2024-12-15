@@ -1,7 +1,7 @@
 import { routeToMapList, getMap, fuseMaps } from "../db/maps.js";
 import { convertGroupToMainStation } from "../db/routing.js";
 
-import type { Map } from "../db/maps.js";
+import type { Map } from "../db/maps.ts";
 
 function getColourPicker() {
   const colours = ["red", "blue", "green", "black", "purple", "orange"];
@@ -17,7 +17,7 @@ interface MapContainer {
   from: string;
   to: string;
 }
-interface PermittedRoutes {
+export interface PermittedRouteMaps {
   regular: MapContainer[];
   london: { from: MapContainer[]; to: MapContainer[] };
 }
@@ -25,7 +25,7 @@ interface PermittedRoutes {
 export async function getPermittedRoutes(
   from: string,
   to: string
-): Promise<PermittedRoutes> {
+): Promise<PermittedRouteMaps> {
   const cp = getColourPicker();
   const allMaps = await routeToMaps(from, to, cp);
 
@@ -142,7 +142,7 @@ export async function routeToMaps(
   from: string,
   to: string,
   colourPicker: ColourPickerFunction
-): Promise<PermittedRoutes> {
+): Promise<PermittedRouteMaps> {
   const regular: MapContainer[] = [];
   const london: { from: MapContainer[]; to: MapContainer[] } = {
     from: [],
@@ -188,6 +188,9 @@ export async function routeToMaps(
         currentMap = fuseMaps(currentMap, await getMap(m, colourPicker()));
       }
     }
+    if (!currentMap)
+      throw new Error("Urgh, we unexpectedly don't have a map to add!");
+
     if (mapCombination != "LO")
       regular.push({
         title: mapCombination.replaceAll(",", "+"),
