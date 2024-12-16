@@ -22,50 +22,50 @@ export async function getPermittedRoutes(
   from = await convertGroupToMainStation(from);
   to = await convertGroupToMainStation(to);
 
-  allMaps.regular = allMaps.regular.map((m) => {
-    return {
-      title: m.title,
-      map: filterOutIrrelevantRoutes(m.map, from, to),
-      from,
-      to,
-    };
-  });
+  // allMaps.regular = allMaps.regular.map((m) => {
+  //   return {
+  //     title: m.title,
+  //     map: filterOutIrrelevantRoutes(m.map, from, to),
+  //     from,
+  //     to,
+  //   };
+  // });
 
-  allMaps.london.to = await Promise.all(
-    allMaps.london.to.map(async (m) => {
-      return {
-        title: m.title,
-        to: m.to,
-        from: m.from,
+  // allMaps.london.to = await Promise.all(
+  //   allMaps.london.to.map(async (m) => {
+  //     return {
+  //       title: m.title,
+  //       to: m.to,
+  //       from: m.from,
 
-        map: filterOutIrrelevantRoutes(
-          m.map,
-          from,
-          await convertGroupToMainStation(m.to)
-        ),
-      };
-    })
-  );
-  allMaps.london.from = await Promise.all(
-    allMaps.london.from.map(async (m) => {
-      return {
-        title: m.title,
-        to: m.to,
-        from: m.from,
+  //       map: filterOutIrrelevantRoutes(
+  //         m.map,
+  //         from,
+  //         await convertGroupToMainStation(m.to)
+  //       ),
+  //     };
+  //   })
+  // );
+  // allMaps.london.from = await Promise.all(
+  //   allMaps.london.from.map(async (m) => {
+  //     return {
+  //       title: m.title,
+  //       to: m.to,
+  //       from: m.from,
 
-        map: filterOutIrrelevantRoutes(
-          m.map,
-          await convertGroupToMainStation(m.from),
-          to
-        ),
-      };
-    })
-  );
+  //       map: filterOutIrrelevantRoutes(
+  //         m.map,
+  //         await convertGroupToMainStation(m.from),
+  //         to
+  //       ),
+  //     };
+  //   })
+  // );
 
   return allMaps;
 }
 
-function filterOutIrrelevantRoutes(map: Map, from: string, to: string) {
+export function filterOutIrrelevantRoutes(map: Map, from: string, to: string) {
   const routes: string[][] = [];
 
   findRoutes(map, from, to, [], routes);

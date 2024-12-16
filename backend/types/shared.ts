@@ -11,7 +11,6 @@ export interface PermittedRouteMaps<T extends MapContainer> {
 }
 
 export interface PermittedRouteOverview {
-  error: boolean;
   fromStation: Station;
   toStation: Station;
   haveSharedRP: boolean;
