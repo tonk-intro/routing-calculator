@@ -9,7 +9,7 @@ import {
 
 import { memo } from "react";
 
-import type {Station} from "@backend/shared"
+import type { Station, Map } from "@backend/shared";
 
 import stationCodeToLatLong from "../helper/converter";
 
@@ -17,10 +17,7 @@ import "leaflet/dist/leaflet.css";
 
 function areEqual(prevProps: Props, nextProps: Props) {
   // console.log("CHECKING EQUALITY");
-  if (
-    prevProps.from == nextProps.from &&
-    prevProps.to == nextProps.to
-  ) {
+  if (prevProps.from == nextProps.from && prevProps.to == nextProps.to) {
     console.log(prevProps);
     return true;
   }
@@ -48,13 +45,18 @@ function MapEvents() {
 }
 
 interface Props {
-  data: any;
+  data: Map;
   from: string;
   to: string;
-  stationList: Station[]
+  stationList: Station[];
 }
 
-const RouteMap = memo(function RouteMap({ data, from, to, stationList }: Props) {
+const RouteMap = memo(function RouteMap({
+  data,
+  from,
+  to,
+  stationList,
+}: Props) {
   console.log("RE-RENDERING");
   const displayStations = [];
   const paths = [];
@@ -117,8 +119,8 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }: Props) 
 
         boundsOptions={{ padding: [50, 50] }}
         bounds={[
-          [coords.latWest, coords.longNorth],
-          [coords.latEast, coords.longSouth],
+          [+coords.latWest!, +coords.longNorth!],
+          [+coords.latEast!, +coords.longSouth!],
         ]}
         scrollWheelZoom={false}
       >
@@ -149,12 +151,15 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }: Props) 
           <Polygon
             key={index}
             pathOptions={{ color: item.colour }}
+            /*
+        // @ts-expect-error Leaflet complains that the array of lat/long coordinates is not of the right type, but it works anyway */
             positions={item.path}
           />
         ))}
       </MapContainer>
     </div>
   );
-}, areEqual);
+},
+areEqual);
 
 export default RouteMap;

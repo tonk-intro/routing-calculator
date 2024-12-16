@@ -1,15 +1,21 @@
 import MapContainer from "./MapContainer";
 
-import type {Station, PermittedRouteOverview} from "@backend/shared"
+import type { Station, PermittedRouteOverview } from "@backend/shared";
+
+import ErrorView, { type ErrorInfo } from "./ErrorView";
 
 interface Props {
-  stationList: Station[],
-  route: PermittedRouteOverview
+  stationList: Station[] | null;
+  route: PermittedRouteOverview | null;
+  error?: ErrorInfo;
 }
 
-export default function RouteOverview({ stationList, route }: Props) {
-  if (!route) return null;
-  if (route.error) return null;
+export default function RouteOverview({ error, stationList, route }: Props) {
+  if (error) return <ErrorView error={error} />;
+
+  if (!route) return <p>Loading ...</p>;
+
+  if (!stationList) return null;
 
   if (route.haveSharedRP) return SharedRoutingPoints(route);
   return DistinctRoutingPoints(stationList, route);
@@ -30,7 +36,10 @@ function SharedRoutingPoints(route: PermittedRouteOverview) {
   );
 }
 
-function DistinctRoutingPoints(stationList: Station[], route: PermittedRouteOverview) {
+function DistinctRoutingPoints(
+  stationList: Station[],
+  route: PermittedRouteOverview
+) {
   return (
     <>
       <div>

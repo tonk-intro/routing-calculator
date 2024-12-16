@@ -1,17 +1,19 @@
-
-export interface ErrorInfo {
-  error: boolean;
-  errorMsg: string
+interface Props {
+  error: ErrorInfo | null;
 }
 
-export default function ErrorView({ data }: {data: ErrorInfo | null}) {
-  if (!data) return <p>Loading ...</p>;
-  if (!data.error) return null;
+export interface ErrorInfo {
+  errorMsg: string;
+}
 
-  return (
-    <div>
-      <h2>An Error Occured!</h2>
-      <p>{data.errorMsg}</p>
-    </div>
-  );
+export default function ErrorView({ error }: Props) {
+  if (error) {
+    return (
+      <div>
+        <h2>An Error Occured!</h2>
+        <p>{error.errorMsg}</p>
+      </div>
+    );
+  }
+  return null;
 }

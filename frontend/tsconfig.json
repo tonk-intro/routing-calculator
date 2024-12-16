@@ -14,8 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "sourceMap": true,
     "jsx": "react-jsx",
     "paths": { "@backend/*": ["../backend/types/*"], },
   },
   "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

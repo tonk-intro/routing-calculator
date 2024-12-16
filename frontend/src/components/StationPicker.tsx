@@ -1,23 +1,32 @@
 import { useRef } from "react";
+import { Station } from "@backend/shared";
 
 let counter = 0;
 
-export function StationPicker({ key, stations, children, onSelected, value }) {
+interface Props {
+  stations: Station[] | null;
+  children?: React.ReactNode;
+  value: string;
+  onSelected: (selected: string) => void;
+
+}
+
+export function StationPicker({ stations, children, onSelected, value }: Props) {
   const id = useRef(counter++);
 
   if (!stations) {
     return <p>Loading ...</p>;
   }
 
-  function onChange(e) {
+  function onChange(e: React.FormEvent<HTMLInputElement>) {
     // if (stations.some((st) => st.name == e.target.value)) {
-    onSelected(e.target.value);
+    onSelected(e.currentTarget.value);
     // }
   }
 
   return (
     <div className="station-picker">
-      <label htmlFor={key + "station"}>{children}</label>
+      <label htmlFor={id.current + "station"}>{children}</label>
       <input
         list={id.current + "station-list"}
         id={id.current + "station"}

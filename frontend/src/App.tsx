@@ -2,24 +2,25 @@ import { useState, useEffect } from "react";
 import { StationPicker } from "./components/StationPicker";
 import "./style.css";
 import RouteOverview from "./components/RouteOverview";
-import ErrorView from "./components/ErrorView";
 import type { ErrorInfo } from "./components/ErrorView";
 
-import { Station, PermittedRouteOverview } from "@backend/shared"
+import { Station, PermittedRouteOverview } from "@backend/shared";
 
 const BACKEND_SERVER = import.meta.env.VITE_BACKEND;
-
 
 function App() {
   const [stationList, setStationList] = useState<Station[] | null>(null);
 
-  const [route, setRoute] = useState<PermittedRouteOverview | ErrorInfo | null>(null);
+  const [error, setError] = useState<ErrorInfo | undefined>(undefined);
+
+  const [route, setRoute] = useState<PermittedRouteOverview | null>(null);
 
   const [from, setFrom] = useState("Cambridge");
   const [to, setTo] = useState("Norwich");
 
   function getRoute(from: string, to: string) {
     setRoute(null);
+    setError(undefined);
     fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
       .then((response) => {
         return response.json();
@@ -27,11 +28,14 @@ function App() {
       .then((res) => {
         console.log("SETTING ROUTE");
         console.log(res);
+        if (res.error) {
+          throw new Error(res.errorMsg);
+        }
+
         setRoute(res);
       })
       .catch((err) => {
-        setRoute({
-          error: true,
+        setError({
           errorMsg: `Failed to fetch route: ${err.message}.`,
         });
       });
@@ -40,11 +44,15 @@ function App() {
     fetch(BACKEND_SERVER + `/stations`)
       .then((response) => response.json())
       .then((res) => {
+        if (res.error) {
+          throw new Error(res.errorMsg);
+        }
+
         setStationList(res);
       })
       .catch((err) => {
-        setRoute({
-          error: true,
+        setRoute(null);
+        setError({
           errorMsg: `Failed to fetch stations: ${err.message}.`,
         });
       });
@@ -88,8 +96,7 @@ function App() {
         <div></div>
       </div>
 
-      <ErrorView data={route} />
-      <RouteOverview stationList={stationList} route={route} />
+      <RouteOverview stationList={stationList} error={error} route={route} />
     </>
   );
 }

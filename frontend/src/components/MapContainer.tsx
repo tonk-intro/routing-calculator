@@ -1,10 +1,10 @@
 import RouteMap from "./RouteMap";
-import {Station, MapContainerRouting} from "@backend/shared"
+import { Station, MapContainerRouting } from "@backend/shared";
 
 interface Props {
-  children?: any;
+  children?: React.ReactNode;
   stationList: Station[];
-  maps: MapContainerRouting[]
+  maps: MapContainerRouting[];
 }
 export default function MapContainer({ children, stationList, maps }: Props) {
   if (!maps) return null;
