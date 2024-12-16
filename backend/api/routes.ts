@@ -32,8 +32,8 @@ interface PermittedRouteOverview {
   fromStation?: string;
   toStation?: string;
   haveSharedRP?: boolean;
-  sharedRP?: Station;
-  routingPoints?: { from: Station[]; to: Station[] };
+  sharedRP: Station;
+  routingPoints: { from: Station[]; to: Station[] };
   maps: PermittedRouteMaps<MapContainerRouting>;
 }
 
@@ -53,6 +53,8 @@ export async function getRouteWithAllDetails(
     haveSharedRP: false,
     error: false,
     maps: { regular: [], london: { from: [], to: [] } },
+    routingPoints: { from: [], to: [] },
+    sharedRP: { id: "", name: "" },
   };
 
   if (from == to) {

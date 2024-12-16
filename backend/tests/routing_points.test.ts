@@ -10,7 +10,7 @@ afterAll(() => {
 describe("Setup Requirements", () => {
   test("Forgetting Setup", async () => {
     await expect(
-      async () => await getRouteWithAllDetails(null, null)
+      async () => await getRouteWithAllDetails("", "")
     ).rejects.toThrow();
   });
 });
