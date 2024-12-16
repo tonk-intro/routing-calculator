@@ -1,4 +1,5 @@
 import pool from "./pool.js";
+import type { Map } from "../types/shared.js";
 
 import { convertGroupToMainStation } from "./routing.js";
 
@@ -37,18 +38,6 @@ export async function getMap(mapId: string, colour = "red") {
   const map = createMap(rows, colour);
   //   console.log(map);
   return map;
-}
-
-interface Station {
-  station: string;
-  colour: string;
-}
-export interface Map {
-  [key: string]: MapEntry;
-}
-interface MapEntry {
-  name: string;
-  neighbours: Station[];
 }
 
 function createMap(rows: MapsRow[], colour: string) {

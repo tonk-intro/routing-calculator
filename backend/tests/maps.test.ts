@@ -45,7 +45,7 @@ describe(
       expect(result.routingPoints.to.map((rp) => rp.id)).toEqual(["CRV"]);
 
       expect(
-        result.maps.regular.reduce((prev, cur) => {
+        result.maps.regular.reduce((prev: any, cur: any) => {
           return [...prev, cur.title];
         }, [])
       ).toEqual(["MC", "PB+CA", "WT+MC", "MP"]);

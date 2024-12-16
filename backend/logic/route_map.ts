@@ -1,7 +1,7 @@
 import { routeToMapList, getMap, fuseMaps } from "../db/maps.js";
 import { convertGroupToMainStation } from "../db/routing.js";
 
-import type { Map } from "../db/maps.ts";
+import type { MapContainer, Map, PermittedRouteMaps } from "../types/shared.js";
 
 function getColourPicker() {
   const colours = ["red", "blue", "green", "black", "purple", "orange"];
@@ -9,17 +9,6 @@ function getColourPicker() {
   return () => {
     return colours[count++ % (colours.length - 1)];
   };
-}
-
-export interface MapContainer {
-  map: Map;
-  title: string;
-  from: string;
-  to: string;
-}
-export interface PermittedRouteMaps<T extends MapContainer> {
-  regular: T[];
-  london: { from: T[]; to: T[] };
 }
 
 export async function getPermittedRoutes(

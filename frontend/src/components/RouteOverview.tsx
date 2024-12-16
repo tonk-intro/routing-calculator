@@ -1,6 +1,13 @@
 import MapContainer from "./MapContainer";
 
-export default function RouteOverview({ stationList, route }) {
+import type {Station, PermittedRouteOverview} from "@backend/shared"
+
+interface Props {
+  stationList: Station[],
+  route: PermittedRouteOverview
+}
+
+export default function RouteOverview({ stationList, route }: Props) {
   if (!route) return null;
   if (route.error) return null;
 
@@ -8,7 +15,7 @@ export default function RouteOverview({ stationList, route }) {
   return DistinctRoutingPoints(stationList, route);
 }
 
-function SharedRoutingPoints(route) {
+function SharedRoutingPoints(route: PermittedRouteOverview) {
   return (
     <div>
       <h2>
@@ -23,7 +30,7 @@ function SharedRoutingPoints(route) {
   );
 }
 
-function DistinctRoutingPoints(stationList, route) {
+function DistinctRoutingPoints(stationList: Station[], route: PermittedRouteOverview) {
   return (
     <>
       <div>

@@ -4,7 +4,8 @@
     "exclude": ["node_modules", "dist", "setup", "tests"],
     "compilerOptions": {
         "outDir": "dist",
-        "strict": true
+        "strict": true,
+        "sourceMap": true
       }
   }
 

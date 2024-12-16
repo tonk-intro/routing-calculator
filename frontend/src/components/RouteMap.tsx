@@ -9,15 +9,17 @@ import {
 
 import { memo } from "react";
 
+import type {Station} from "@backend/shared"
+
 import stationCodeToLatLong from "../helper/converter";
 
 import "leaflet/dist/leaflet.css";
 
-function areEqual(prevProps, nextProps) {
+function areEqual(prevProps: Props, nextProps: Props) {
   // console.log("CHECKING EQUALITY");
   if (
-    prevProps.from.id == nextProps.from.id &&
-    prevProps.to.id == nextProps.to.id
+    prevProps.from == nextProps.from &&
+    prevProps.to == nextProps.to
   ) {
     console.log(prevProps);
     return true;
@@ -45,7 +47,14 @@ function MapEvents() {
   return null;
 }
 
-const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
+interface Props {
+  data: any;
+  from: string;
+  to: string;
+  stationList: Station[]
+}
+
+const RouteMap = memo(function RouteMap({ data, from, to, stationList }: Props) {
   console.log("RE-RENDERING");
   const displayStations = [];
   const paths = [];
@@ -72,21 +81,21 @@ const RouteMap = memo(function RouteMap({ data, from, to, stationList }) {
     latWest: paths
       .map((p) => p.path)
       .map((p) => p[0][0])
-      .sort((a, b) => a - b)[0],
+      .sort((a, b) => +a! - +b!)[0],
 
     latEast: paths
       .map((p) => p.path)
       .map((p) => p[0][0])
-      .sort((a, b) => b - a)[0],
+      .sort((a, b) => +b! - +a!)[0],
     longSouth: paths
       .map((p) => p.path)
       .map((p) => p[0][1])
-      .sort((a, b) => a - b)[0],
+      .sort((a, b) => +a! - +b!)[0],
 
     longNorth: paths
       .map((p) => p.path)
       .map((p) => p[0][1])
-      .sort((a, b) => b - a)[0],
+      .sort((a, b) => +b! - +a!)[0],
   };
 
   if (coords.latWest == null) {

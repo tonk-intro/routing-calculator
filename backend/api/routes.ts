@@ -1,8 +1,7 @@
 import { getNeighbours } from "../db/distances.js";
 import { createRailwayGraph } from "../logic/graph.js";
 import type { ShortestPathFunc } from "../logic/routing_points.js";
-
-import type { PermittedRouteMaps, MapContainer } from "../logic/route_map.ts";
+import type { PermittedRouteOverview } from "../types/shared.js";
 
 import { shortestPath } from "../logic/dijkstra.js";
 import {
@@ -25,23 +24,6 @@ export async function setup() {
   shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
 }
 
-import type { Station } from "../db/stations.js";
-
-interface PermittedRouteOverview {
-  error: boolean;
-  fromStation?: string;
-  toStation?: string;
-  haveSharedRP?: boolean;
-  sharedRP: Station;
-  routingPoints: { from: Station[]; to: Station[] };
-  maps: PermittedRouteMaps<MapContainerRouting>;
-}
-
-interface MapContainerRouting extends MapContainer {
-  toRP: string;
-  fromRP: string;
-}
-
 // Input names of target and destination station
 export async function getRouteWithAllDetails(
   from: string,
@@ -55,6 +37,8 @@ export async function getRouteWithAllDetails(
     maps: { regular: [], london: { from: [], to: [] } },
     routingPoints: { from: [], to: [] },
     sharedRP: { id: "", name: "" },
+    fromStation: { name: "", id: "" },
+    toStation: { name: "", id: "" },
   };
 
   if (from == to) {

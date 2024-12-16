@@ -3,18 +3,22 @@ import { StationPicker } from "./components/StationPicker";
 import "./style.css";
 import RouteOverview from "./components/RouteOverview";
 import ErrorView from "./components/ErrorView";
+import type { ErrorInfo } from "./components/ErrorView";
+
+import { Station, PermittedRouteOverview } from "@backend/shared"
 
 const BACKEND_SERVER = import.meta.env.VITE_BACKEND;
 
-function App() {
-  const [stationList, setStationList] = useState(null);
 
-  const [route, setRoute] = useState(null);
+function App() {
+  const [stationList, setStationList] = useState<Station[] | null>(null);
+
+  const [route, setRoute] = useState<PermittedRouteOverview | ErrorInfo | null>(null);
 
   const [from, setFrom] = useState("Cambridge");
   const [to, setTo] = useState("Norwich");
 
-  function getRoute(from, to) {
+  function getRoute(from: string, to: string) {
     setRoute(null);
     fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
       .then((response) => {
@@ -69,13 +73,13 @@ function App() {
           <StationPicker
             stations={stationList}
             value={from}
-            onSelected={(st) => setFrom(st)}
+            onSelected={(st: string) => setFrom(st)}
           >
             From:
           </StationPicker>
           <StationPicker
             value={to}
-            onSelected={(st) => setTo(st)}
+            onSelected={(st: string) => setTo(st)}
             stations={stationList}
           >
             To:

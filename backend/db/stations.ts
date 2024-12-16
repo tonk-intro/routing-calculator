@@ -1,4 +1,5 @@
 import pool from "./pool.js";
+import type { Station } from "../types/shared.js";
 
 export async function getStationById(id: string) {
   const { rows } = await pool.query("SELECT * FROM stations WHERE id=$1;", [
@@ -10,11 +11,6 @@ export async function getStationById(id: string) {
   if (rows.length == 0) throw new Error("No Station found for ID " + id);
 
   return rows[0];
-}
-
-export interface Station {
-  name: string;
-  id: string;
 }
 
 export async function getStationOrGroupNameById(id: string): Promise<Station> {
@@ -56,7 +52,7 @@ export async function getAllStationIds() {
   return rows.map((item) => item.id);
 }
 
-export async function getAllStations() {
+export async function getAllStations(): Promise<Station[]> {
   const { rows } = await pool.query(
     "SELECT id, name, lat, long FROM stations JOIN locations ON stations.id = locations.station_id;"
   );

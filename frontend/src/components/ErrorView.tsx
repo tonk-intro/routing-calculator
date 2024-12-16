@@ -1,4 +1,10 @@
-export default function ErrorView({ data }) {
+
+export interface ErrorInfo {
+  error: boolean;
+  errorMsg: string
+}
+
+export default function ErrorView({ data }: {data: ErrorInfo | null}) {
   if (!data) return <p>Loading ...</p>;
   if (!data.error) return null;
 

@@ -4,7 +4,6 @@
   "main": "map_test.js",
   "scripts": {
     "start": "tsc --watch & node --watch dist/express/app.js",
-    "test-old": "node --experimental-vm-modules node_modules/.bin/jest --watch",
     "test": "vitest --watch"
   },
   "keywords": [],

@@ -1,6 +1,12 @@
 import RouteMap from "./RouteMap";
+import {Station, MapContainerRouting} from "@backend/shared"
 
-export default function MapContainer({ children, stationList, maps }) {
+interface Props {
+  children?: any;
+  stationList: Station[];
+  maps: MapContainerRouting[]
+}
+export default function MapContainer({ children, stationList, maps }: Props) {
   if (!maps) return null;
   if (maps.length == 0) return null;
 
