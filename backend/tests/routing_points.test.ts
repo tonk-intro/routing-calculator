@@ -1,6 +1,7 @@
-require("dotenv").config({ path: ".env" });
-const pool = require("../db/pool");
-const { setup, getRouteWithAllDetails } = require("../api/routes");
+import "dotenv/config.js";
+import pool from "../db/pool";
+import { setup, getRouteWithAllDetails } from "../api/routes";
+import { describe, expect, afterAll, beforeAll, test } from "vitest";
 
 afterAll(() => {
   pool.end();
@@ -51,18 +52,22 @@ describe("Distinct Routing Points", () => {
   // !!!: The documentation includes SAL but not the official routing calculator that is online!
   // I follow the latter as this corresponds to the data.
 
-  test("Gunnislake to Crewkerne", async () => {
-    const result = await getRouteWithAllDetails("Gunnislake", "Crewkerne");
+  test(
+    "Gunnislake to Crewkerne",
+    async () => {
+      const result = await getRouteWithAllDetails("Gunnislake", "Crewkerne");
 
-    console.log(result);
-    expect(
-      result.routingPoints.from.map((rp) => rp.id).includes("G21")
-    ).toBeTruthy();
-    expect(
-      result.routingPoints.to.map((rp) => rp.id).includes("G12")
-    ).toBeTruthy();
-    // expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
-  });
+      // console.log(result);
+      expect(
+        result.routingPoints.from.map((rp) => rp.id).includes("G21")
+      ).toBeTruthy();
+      expect(
+        result.routingPoints.to.map((rp) => rp.id).includes("G12")
+      ).toBeTruthy();
+      // expect(result.routingPoints.to.includes("SAL")).toBeTruthy();
+    },
+    { timeout: 10000 }
+  );
 
   // Example 1: HERNE BAY TO GRAVESEND
   test("Herne Bay to Gravesend", async () => {

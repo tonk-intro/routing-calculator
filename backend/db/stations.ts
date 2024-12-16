@@ -12,7 +12,12 @@ export async function getStationById(id: string) {
   return rows[0];
 }
 
-export async function getStationOrGroupNameById(id: string) {
+export interface Station {
+  name: string;
+  id: string;
+}
+
+export async function getStationOrGroupNameById(id: string): Promise<Station> {
   const pattern = /^G\d{2}$/;
 
   if (!pattern.test(id)) {

@@ -3,6 +3,9 @@
     "include": ["**/*"],
     "exclude": ["node_modules", "dist", "setup", "tests"],
     "compilerOptions": {
+        "module": "ESNext", // or ES2022
+        "target": "ESNext",
+        "esModuleInterop": true,
         "allowJs": true,
         "outDir": "dist",
         "strict": true

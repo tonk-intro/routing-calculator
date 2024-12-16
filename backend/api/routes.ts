@@ -25,14 +25,16 @@ export async function setup() {
   shortestPathFunc = (from, to) => shortestPath(stationsGraph, from, to);
 }
 
+import type { Station } from "../db/stations.js";
+
 interface PermittedRouteOverview {
-  error?: boolean;
+  error: boolean;
   fromStation?: string;
   toStation?: string;
   haveSharedRP?: boolean;
-  sharedRP?: string;
-  routingPoints?: { from: string[]; to: string[] };
-  maps?: PermittedRouteMaps<MapContainerRouting>;
+  sharedRP?: Station;
+  routingPoints?: { from: Station[]; to: Station[] };
+  maps: PermittedRouteMaps<MapContainerRouting>;
 }
 
 interface MapContainerRouting extends MapContainer {
@@ -47,7 +49,11 @@ export async function getRouteWithAllDetails(
 ): Promise<PermittedRouteOverview> {
   if (!shortestPathFunc) throw new Error("call setup first!");
 
-  const result: PermittedRouteOverview = { haveSharedRP: false, error: false };
+  const result: PermittedRouteOverview = {
+    haveSharedRP: false,
+    error: false,
+    maps: { regular: [], london: { from: [], to: [] } },
+  };
 
   if (from == to) {
     throw new Error("Origin and destination are identical: " + from + ".");
@@ -87,8 +93,6 @@ export async function getRouteWithAllDetails(
       toRPs.map(async (rp) => await getStationOrGroupNameById(rp))
     ),
   };
-
-  result.maps = { regular: [], london: { from: [], to: [] } };
 
   for (const rp1 of fromRPs) {
     for (const rp2 of toRPs) {
