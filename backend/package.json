@@ -18,9 +18,7 @@
     "express": "^4.21.1",
     "pg": "^8.13.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  },
-  "devDependencies": {
+    "typescript": "^5.7.2",
     "@tsconfig/node20": "^20.1.4",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",

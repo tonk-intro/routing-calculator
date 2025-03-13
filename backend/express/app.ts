@@ -12,7 +12,7 @@ import cors from "cors";
 // const { serialize } = require("v8");
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  // origin: ["http://localhost:80"],
 };
 
 app.use(cors(corsOptions));
@@ -36,7 +36,7 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 setup().then((res) => {
-  const PORT = 3000;
+  const PORT = process.env.BACKEND_PORT;
   app.listen(PORT, () => {
     console.log(`Routing Calculator Backend - listening on port ${PORT}!`);
   });
