@@ -70,6 +70,9 @@ export async function getRouteWithAllDetails(
 
   const validRPs = await getValidRoutingPoints(fromStation.id, toStation.id);
 
+  if (!validRPs.from.length || !validRPs.to.length)
+    throw new Error("No valid routing points were found! ");
+
   const fromRPs = validRPs.from;
   const toRPs = validRPs.to;
 

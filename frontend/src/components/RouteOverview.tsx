@@ -50,25 +50,26 @@ function DistinctRoutingPoints(
         <p>
           {route.fromStation.name} is associated with the following routing
           points:
-          <ul>
-            {route.routingPoints.from.map((item, index) => (
-              <li key={index}>
-                {item.name} ({item.id})
-              </li>
-            ))}
-          </ul>
         </p>
+
+        <ul>
+          {route.routingPoints.from.map((item, index) => (
+            <li key={index}>
+              {item.name} ({item.id})
+            </li>
+          ))}
+        </ul>
         <p>
           {route.toStation.name} is associated with the following routing
           points:
-          <ul>
-            {route.routingPoints.to.map((item, index) => (
-              <li key={index}>
-                {item.name} ({item.id})
-              </li>
-            ))}
-          </ul>
         </p>
+        <ul>
+          {route.routingPoints.to.map((item, index) => (
+            <li key={index}>
+              {item.name} ({item.id})
+            </li>
+          ))}
+        </ul>
       </div>
       <MapContainer
         stationList={stationList}

@@ -18,7 +18,6 @@ import "leaflet/dist/leaflet.css";
 function areEqual(prevProps: Props, nextProps: Props) {
   // console.log("CHECKING EQUALITY");
   if (prevProps.from == nextProps.from && prevProps.to == nextProps.to) {
-    console.log(prevProps);
     return true;
   }
 
@@ -105,7 +104,7 @@ const RouteMap = memo(function RouteMap({
     throw new Error("It seems that the map was empty!?");
     // return null;
   }
-  console.table(coords);
+  // console.table(coords);
 
   const fromStation = stationCodeToLatLong(stationList, from);
   const toStation = stationCodeToLatLong(stationList, to);

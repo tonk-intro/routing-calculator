@@ -29,7 +29,7 @@ export async function getStationOrGroupNameById(id: string): Promise<Station> {
   return { name: rows[0].name, id: id };
 }
 
-export async function getStationByName(name: string) {
+export async function getStationByName(name: string): Promise<Station> {
   const { rows } = await pool.query("SELECT * FROM stations WHERE name=$1;", [
     name,
   ]);
