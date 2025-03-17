@@ -3,6 +3,8 @@ FROM node:18-alpine AS build
 WORKDIR /app/frontend
 COPY backend/types /app/backend/types
 COPY frontend/package*.json ./
+ARG VITE_BACKEND
+
 RUN npm install
 COPY frontend .
 RUN pwd
