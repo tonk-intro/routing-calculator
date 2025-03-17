@@ -93,7 +93,6 @@ function App() {
             To:
           </StationPicker>
         </div>
-        <div></div>
       </div>
 
       <RouteOverview stationList={stationList} error={error} route={route} />

@@ -41,7 +41,7 @@ function DistinctRoutingPoints(
   route: PermittedRouteOverview
 ) {
   return (
-    <>
+    <div className="route-overview-container">
       <div>
         <h2>
           {route.fromStation.name} to {route.toStation.name}
@@ -85,7 +85,7 @@ function DistinctRoutingPoints(
           <h2>London to {route.toStation.name}</h2>
         </MapContainer>
       </div>
-    </>
+    </div>
   );
 }
 

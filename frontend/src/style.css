@@ -5,35 +5,61 @@ body {
   width: 100%;
   margin: 20px;
   font-family: "Montserrat", sans-serif;
+  font-size: 12pt;
 }
 
 body > div {
-  min-width: 700px;
+  /* min-width: 700px; */
   flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 body > div > div {
-  min-width: 700px;
+  /* min-width: 700px; */
 }
 
 .picker-container {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
 }
 
 .station-picker {
   display: flex;
-  gap: 10px;
+  /* gap: 10px; */
+  /* justify-content: space-between; */
   flex: 1;
 }
 
-.side-by-side {
-  display: flex;
-  gap: 30px;
+.station-picker label {
+  width: 60px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
+}
+
+.leaflet-routing-map {
+  width: 300px;
+  height: 300px;
+}
+
+.route-overview-container {
+  padding: 20px;
+  /* width: 90%; */
+}
+
+@media (min-width: 1100px) {
+  .leaflet-routing-map {
+    width: 500px;
+    height: 400px;
+  }
+
+  .side-by-side {
+    display: flex;
+    gap: 30px;
+  }
 }

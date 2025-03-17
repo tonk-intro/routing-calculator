@@ -112,7 +112,8 @@ const RouteMap = memo(function RouteMap({
   return (
     <div id="map">
       <MapContainer
-        style={{ width: "600px", height: "400px" }}
+        // style={{ max-width: "600px", height: "400px" }}
+        className="leaflet-routing-map"
         // center={[center.lat, center.long]}
         // zoom={7}
 
