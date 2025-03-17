@@ -13,7 +13,7 @@ import type { Station, Map } from "@backend/shared";
 
 import stationCodeToLatLong from "../helper/converter";
 
-import "leaflet/dist/leaflet.css";
+// import "leaflet/dist/leaflet.css";
 
 function areEqual(prevProps: Props, nextProps: Props) {
   // console.log("CHECKING EQUALITY");
