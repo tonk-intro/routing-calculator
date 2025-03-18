@@ -32,7 +32,12 @@ function areEqual(prevProps: Props, nextProps: Props) {
 function MapEvents() {
   const map = useMapEvents({
     click: () => {
-      map.scrollWheelZoom.enable();
+      if (window.matchMedia("(pointer: coarse)").matches) {
+        // Touchscreen
+        return;
+      } else {
+        map.scrollWheelZoom.enable();
+      }
     },
     mouseout: () => {
       // alert("Left");
