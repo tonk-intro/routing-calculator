@@ -18,8 +18,8 @@ export function StationPicker({
 }: Props) {
   const id = useRef(counter++);
 
-  const lastStation = useRef("");
-  const focused = useRef(false);
+  // const lastStation = useRef("");
+  // const focused = useRef(false);
 
   if (!stations) {
     return <p>Loading ...</p>;
@@ -31,7 +31,7 @@ export function StationPicker({
     // }
   }
 
-  function onClick(e: React.FormEvent<HTMLInputElement>) {
+  function onClick(e: React.FormEvent<HTMLButtonElement>) {
     // if (!focused.current) {
     //   focused.current = true;
     //   if (stations && stations.some((st) => st.name == e.currentTarget.value))
