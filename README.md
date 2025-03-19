@@ -2,9 +2,6 @@
 
 ## Motivation
 
-<img src="assets/ticket.png" alt="A railway ticket" width="200"/>
-
-
 When buying a railway ticket in the UK, chances are that the ticket will said to be ''valid via any permitted route''. **Which** routes are the valid ones though? That can be surprisingly hard to find out. There are three distinct criteria in virtue of which a route can count as valid:
 
 1. It is the route an ''advertised through train'' takes.
@@ -35,26 +32,30 @@ Thankfully National Rail provides a [Routing Point Calculator](https://rgpp.iblo
 
 4. **Routing Codes**
 
-Special case: LONDON
+Having identified the salient routing points, we can now turn to the *yellow pages* (a PDF with over 2,200 pages) to determine the codes of the permitted routes between origin routing point and destination routing point.
+
+A special case to consider here are London routes. In case one of the routing codes from A to B is LONDON, this means that we also need to take into account all the routing codes from A to LONDON, and then from LONDON to B. Sometimes all permitted routes from A to B go via London, but mixed scenarios are possible as well.
 
 
 5. **Route Maps**
 
-[Official Maps](https://rgpp.iblocks.co.uk/maps)
+With the routing maps in hand we can finally consider the maps which show actual routes. The procedure is best explained by means of an example. Suppose we want to travel from Cambridge to Hull. From the previous steps we get the following routing codes: *AH, KE+HU*. *AH*, *KE*, *HU* all refer to maps we need to consult. In case of a single map, ''the route is via any route on that map from the first routeing point to the final routeing point without doubling back''. In case of map combinations like *KE+HU*, ''the route is via any route on [the first] map from the first routeing point to intercept point(s) for the next map
+without doubling back, then via any route within that map without doubling back. This is
+repeated until the final map is reached then via any route within that map until the final
+routeing point is reached''.
 
-[Vail Data Routing Guide](https://vaildata.uk/routeing?map=)
+Network Rail provides an [official viewer](https://rgpp.iblocks.co.uk/maps) for individual maps. A more powerful took that determines the relevant maps for routing points and allows one to blend up to four maps on onto one is available at [Vail Data](https://vaildata.uk/routeing?map=).
 
 
 6. **From Station to Routing Point**
 
-In case the stations aren't themselves routing points
-''If one station is a routeing point and the other one is a related station, the permitted route is the
-shortest route to the routeing point plus the permitted routes between routeing points.
-If both are related stations, use the shortest distance to the first routeing point, followed by the
+If both origin and destination were routing points themselves, this step can be skipped and we are (nearly) done. If not the question of how to get from origin and/or destination station to the routing point(s) arises. The answer: ''use the shortest distance to the first routeing point, followed by the
 permitted routes between the routeing points, then finally the shortest route from the final
 routeing point.''
 
 7. **Easements**
+
+Finally we can check whether there are any *easements* for our route. Easements can allow journeys that would otherwise be forbidded, for instance by permitting doubling back in certain circumstances. Consult the [37-page Easements list](https://www.nationalrail.co.uk/travel-information/routeing-guide/)] (Section E).
 
 ## My implementation
 
