@@ -2,7 +2,8 @@
 
 ## Motivation
 
-![A railway ticket](assets/ticket.png)
+<img src="assets/ticket.png" alt="A railway ticket" width="200"/>
+
 
 When buying a railway ticket in the UK, chances are that the ticket will said to be ''valid via any permitted route''. **Which** routes are the valid ones though? That can be surprisingly hard to find out. There are three distinct criteria in virtue of which a route can count as valid:
 
