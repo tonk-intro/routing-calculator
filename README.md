@@ -10,11 +10,11 @@ When buying a railway ticket in the UK, chances are that the ticket will said to
 2. It is the shortest route between the source and destination.
 3. It is neither of the above, but the route is listed in the *National Routing Guide*.
 
-The first criterion sounds complicated but is the most straightforward. If you want to travel from A to B, and a particular route shows up when searching for trains from A to B with [https://www.nationalrail.co.uk/](the official journey planner), then that route is valid.
+The first criterion sounds complicated but is the most straightforward. If you want to travel from A to B, and a particular route shows up when searching for trains from A to B with [the official journey planner](https://www.nationalrail.co.uk/), then that route is valid.
 
-The second criterion sound easy but is a bit harder to apply. Network Rail provides a [https://www.networkrail.co.uk/running-the-railway/the-timetable/electronic-national-rail-timetable/](mileages table), and the Routing Guide manual suggests to compute the ''throughout distance for travel between every station by any route'' by adding ''mileages together for the component parts of the journey by referring to the relevant timetables''. But helpfully someone has already automated this process and we can thus use the [https://my.railmiles.me/mileage-engine/](RailMiles Mileage Engine).
+The second criterion sound easy but is a bit harder to apply. Network Rail provides a [mileages table](https://www.networkrail.co.uk/running-the-railway/the-timetable/electronic-national-rail-timetable/), and the Routing Guide manual suggests to compute the ''throughout distance for travel between every station by any route'' by adding ''mileages together for the component parts of the journey by referring to the relevant timetables''. But helpfully someone has already automated this process and we can thus use the [RailMiles Mileage Engine](https://my.railmiles.me/mileage-engine/).
 
-The third criterion is complicated, because using the [https://www.nationalrail.co.uk/travel-information/routeing-guide/](National Routing Guide) is difficult. In order to get the full list of permitted routes from A to B, one needs to go through up to seven steps:
+The third criterion is complicated, because using the [National Routing Guide](https://www.nationalrail.co.uk/travel-information/routeing-guide/) is difficult. In order to get the full list of permitted routes from A to B, one needs to go through up to seven steps:
 
 1. **Routing Points**
 
@@ -30,7 +30,7 @@ If origin and destination **don't** have any routing points in common, then we n
 
 In order to determine the appropriateness of routing points, we consult the historic National Fares Manual data from September 1996 (NFM64). A routing point for the origin station is appropriate for the destination only if the fare -- in 1996 -- from that *routing point* to the destination was the same or lower than the fare from *the origin station* to the destination. The same procedure is then applied to the routing points of the destination as well.
 
-Thankfully National Rail provides a [https://rgpp.iblocks.co.uk/routeing-point-calculator](Routing Point Calculator) to helpf with this part of the process.
+Thankfully National Rail provides a [Routing Point Calculator](https://rgpp.iblocks.co.uk/routeing-point-calculator) to helpf with this part of the process.
 
 4. **Routing Codes**
 
@@ -39,9 +39,9 @@ Special case: LONDON
 
 5. **Route Maps**
 
-[https://rgpp.iblocks.co.uk/maps](Official Maps)
+[Official Maps](https://rgpp.iblocks.co.uk/maps)
 
-[https://vaildata.uk/routeing?map=](Vail Data Routing Guide)
+[Vail Data Routing Guide](https://vaildata.uk/routeing?map=)
 
 
 6. **From Station to Routing Point**
