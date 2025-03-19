@@ -8,11 +8,18 @@ interface Props {
   children?: React.ReactNode;
   value: string;
   onSelected: (selected: string) => void;
-
 }
 
-export function StationPicker({ stations, children, onSelected, value }: Props) {
+export function StationPicker({
+  stations,
+  children,
+  onSelected,
+  value,
+}: Props) {
   const id = useRef(counter++);
+
+  const lastStation = useRef("");
+  const focused = useRef(false);
 
   if (!stations) {
     return <p>Loading ...</p>;
@@ -24,6 +31,22 @@ export function StationPicker({ stations, children, onSelected, value }: Props) 
     // }
   }
 
+  function onClick(e: React.FormEvent<HTMLInputElement>) {
+    // if (!focused.current) {
+    //   focused.current = true;
+    //   if (stations && stations.some((st) => st.name == e.currentTarget.value))
+    //     lastStation.current = e.currentTarget.value;
+    // e.currentTarget.value = "";
+    onSelected("");
+  }
+
+  // function onLeaveFocus(e: React.FormEvent<HTMLInputElement>) {
+  //   // focused.current = false;
+  //   // if (stations && !stations.some((st) => st.name == e.currentTarget.value)) {
+  //   //   e.currentTarget.value = lastStation.current;
+  //   // }
+  // }
+
   return (
     <div className="station-picker">
       <label htmlFor={id.current + "station"}>{children}</label>
@@ -33,7 +56,9 @@ export function StationPicker({ stations, children, onSelected, value }: Props) 
         name={id.current + "station-choice"}
         value={value}
         onChange={(e) => onChange(e)}
+        // onBlur={(e) => onLeaveFocus(e)}
       />
+      <button onClick={(e) => onClick(e)}>Clear</button>
       <datalist id={id.current + "station-list"}>
         {stations.map((st) => (
           <option key={st.id} value={st.name} />
