@@ -55,7 +55,7 @@ routeing point.''
 
 7. **Easements**
 
-Finally we can check whether there are any *easements* for our route. Easements can allow journeys that would otherwise be forbidded, for instance by permitting doubling back in certain circumstances. Consult the [37-page Easements list](https://www.nationalrail.co.uk/travel-information/routeing-guide/)] (Section E).
+Finally we can check whether there are any *easements* for our route. Easements can allow journeys that would otherwise be forbidded, for instance by permitting doubling back in certain circumstances. Consult the [37-page Easements list](https://www.nationalrail.co.uk/travel-information/routeing-guide/) (Section E).
 
 ## My implementation
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, MutableRefObject } from "react";
 import { StationPicker } from "./components/StationPicker";
 import "./style.css";
 import RouteOverview from "./components/RouteOverview";
@@ -18,10 +18,15 @@ function App() {
   const [from, setFrom] = useState("Cambridge");
   const [to, setTo] = useState("Norwich");
 
-  function getRoute(from: string, to: string) {
+  const lastAbortController: MutableRefObject<AbortController | undefined> =
+    useRef();
+
+  function getRoute(from: string, to: string, signal: AbortSignal) {
     setRoute(null);
     setError(undefined);
-    fetch(BACKEND_SERVER + `/maps/${from}/${to}`)
+    fetch(BACKEND_SERVER + `/maps/${from}/${to}`, {
+      signal,
+    })
       .then((response) => {
         return response.json();
       })
@@ -31,15 +36,19 @@ function App() {
         if (res.error) {
           throw new Error(res.errorMsg);
         }
+        if (signal.aborted) return;
 
         setRoute(res);
       })
       .catch((err) => {
+        if (signal.aborted) return;
+
         setError({
           errorMsg: `Failed to fetch route: ${err.message}.`,
         });
       });
   }
+
   function getStations() {
     fetch(BACKEND_SERVER + `/stations`)
       .then((response) => response.json())
@@ -68,8 +77,18 @@ function App() {
       stationList.some((st) => st.name == from) &&
       stationList.some((st) => st.name == to)
     ) {
-      // console.log(`Let's fetch fetch route from ${from} to ${to}`);
-      getRoute(from, to);
+      console.log(`Let's fetch fetch route from ${from} to ${to}`);
+
+      // Cancel previous requests!
+
+      if (lastAbortController.current) {
+        lastAbortController.current.abort();
+      }
+
+      const currentAbortController = new AbortController();
+      lastAbortController.current = currentAbortController;
+
+      getRoute(from, to, currentAbortController.signal);
     }
   }, [from, to, stationList]);
 
