@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:9.6.22
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=permitted_routes
+    volumes:
+      - ./routes_db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  backend:
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+    build:
+      context: ./backend
+      dockerfile: Docker_backend
+
+    environment:
+      - DB_HOST=172.17.0.1
+      - DB_USER=postgres
+      - DB_NAME=permitted_routes
+      - DB_PW=postgres
+      - DB_PORT=5432
+      - BACKEND_PORT=3000
+    ports:
+      -  3000:3000
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Docker_frontend
+      args:
+        - VITE_BACKEND
+    ports:
+      - 80:80
+
+
+
+
