@@ -1,6 +1,5 @@
 services:
   db:
-    image: postgres:9.6.22
     ports:
       - 5432:5432
     environment:
@@ -8,13 +7,14 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=permitted_routes
     volumes:
-      - ./routes_db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./deploy/routes_db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d permitted_routes"]
       interval: 10s
       retries: 5
       start_period: 30s
       timeout: 10s
+    image: postgres:9.6.22
 
   backend:
     depends_on:
