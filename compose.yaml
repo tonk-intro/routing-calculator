@@ -37,7 +37,8 @@ services:
       -  3000:3000
 
   frontend:
-    depends_on: backend
+    depends_on:
+      - backend
     build:
       context: .
       dockerfile: Docker_frontend
