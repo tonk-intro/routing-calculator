@@ -7,9 +7,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=permitted_routes
     volumes:
-      - ./deploy/routes_db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./routes_db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d permitted_routes"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d permitted_routes"]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -37,6 +37,7 @@ services:
       -  3000:3000
 
   frontend:
+    depends_on: backend
     build:
       context: .
       dockerfile: Docker_frontend
