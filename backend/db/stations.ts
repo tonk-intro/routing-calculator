@@ -45,6 +45,7 @@ interface StationsRow {
 }
 
 export async function getAllStationIds() {
+  console.log(pool.options);
   const { rows }: { rows: StationsRow[] } = await pool.query(
     "SELECT id FROM stations;"
   );
