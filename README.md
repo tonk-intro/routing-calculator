@@ -65,6 +65,7 @@ Mention:
 
 # Data Sources
 
-For station locations: https://github.com/davwheat/uk-railway-stations
+- The raw data for the National Routing Guide is provided by [National Rail Data Portal](https://opendata.nationalrail.co.uk/). The [Open Rail Data Wiki](https://wiki.openraildata.com/index.php/DTD) explains how to download the relevant files. The [National Routeing Guide Data Feed Specification](https://www.rspaccreditation.org/publicDocumentation.php#RSPS5xxx) is essential for using them.
+- For mapping station codes to coordinates on the map I used [David Wheatley's](https://github.com/davwheat) [uk-railway-stations](https://github.com/davwheat/uk-railway-stations), which is based on data by [Trainline EU] (https://github.com/trainline-eu/stations#licence)
 
 
